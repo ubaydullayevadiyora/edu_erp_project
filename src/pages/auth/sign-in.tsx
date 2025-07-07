@@ -20,7 +20,6 @@ const SignIn = () => {
       if (res?.status === 201) {
         setItem("access_token", res.data.access_token);
         setItem("role", role);
-        message.success("Successfully signed in!");
         navigate(`/${role}`);
       } else {
         message.error("Login failed");

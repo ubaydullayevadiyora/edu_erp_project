@@ -5,10 +5,14 @@ import {
   MenuUnfoldOutlined,
   TeamOutlined,
   SettingOutlined,
+  UserOutlined,
+  PaperClipOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Typography } from "antd";
+import { Button, Layout, Menu, theme } from "antd";
 
 const { Header, Sider, Content } = Layout;
+
+// <LogoutOutlined /> log out uchun
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -27,6 +31,19 @@ const AdminLayout = () => {
       onClick: () => navigate("/admin/groups"),
     },
     {
+      key: "courses",
+      icon: <PaperClipOutlined />,
+      label: "Courses",
+      onClick: () => navigate("/admin/courses"),
+    },
+
+    {
+      key: "student",
+      icon: <UserOutlined />,
+      label: "Student",
+      onClick: () => navigate("/admin/student"),
+    },
+    {
       key: "settings",
       icon: <SettingOutlined />,
       label: "Settings",
@@ -37,7 +54,7 @@ const AdminLayout = () => {
   const selectedKey = location.pathname.split("/")[2] || "groups";
 
   return (
-    <Layout style={{ minHeight: "100vh", background: "#f0f2f5" }}>
+    <Layout style={{ minHeight: "100vh", margin: 0 }}>
       <Sider
         trigger={null}
         collapsible
@@ -45,21 +62,9 @@ const AdminLayout = () => {
         width={200}
         style={{ background: "#001529" }}
       >
-        <div
-          style={{
-            height: 64,
-            margin: 16,
-            color: "white",
-            fontSize: 22,
-            fontWeight: "bold",
-            textAlign: "center",
-            lineHeight: "64px",
-            background: "rgba(255, 255, 255, 0.15)",
-            borderRadius: 8,
-          }}
-        >
-          Admin
-        </div>
+        {/* <div className="text-white text-center py-4 text-xl font-bold">
+          {collapsed ? " " : "Admin"}
+        </div> */}
 
         <Menu
           theme="dark"
@@ -72,7 +77,7 @@ const AdminLayout = () => {
       <Layout>
         <Header
           style={{
-            padding: "0 24px",
+            padding: "0 16px",
             background: colorBgContainer,
             display: "flex",
             alignItems: "center",
@@ -85,14 +90,15 @@ const AdminLayout = () => {
             onClick={() => setCollapsed(!collapsed)}
             style={{ fontSize: 18 }}
           />
-          <Typography.Text strong>Admin Panel</Typography.Text>
+          {/* <Typography.Text strong>Admin Panel</Typography.Text> */}
+          {/* shuni o'rniga sign out qo'yamiz */}
         </Header>
 
         <Content
           style={{
+            margin: "20px 16px",
             padding: 24,
-            minHeight: "calc(100vh - 64px)",
-            background: "#fff",
+            minHeight: 280,
           }}
         >
           <Outlet />

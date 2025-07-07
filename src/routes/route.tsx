@@ -1,4 +1,4 @@
-import { createRoutesFromElements, RouterProvider } from "react-router-dom";
+import { createRoutesFromElements, Navigate, RouterProvider } from "react-router-dom";
 import { createBrowserRouter, Route } from "react-router-dom";
 import App from "../App";
 import {
@@ -17,10 +17,10 @@ const Router = () => {
       <Route path="/" element={<App />}>
         <Route index element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
-        <Route path="*" element={<NotFound />} />
 
         {/* admin layout */}
         <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="groups" replace />} />
           <Route path="groups" element={<Groups />} />
         </Route>
 
@@ -29,6 +29,9 @@ const Router = () => {
 
         {/* student layout */}
         <Route path="student" element={<StudentLayout />}></Route>
+
+        {/* not found */}
+        <Route path="*" element={<NotFound />} />
       </Route>
     )
   );
