@@ -7,12 +7,11 @@ import {
   SettingOutlined,
   UserOutlined,
   PaperClipOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, theme, Tooltip } from "antd";
 
 const { Header, Sider, Content } = Layout;
-
-// <LogoutOutlined /> log out uchun
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -22,6 +21,12 @@ const AdminLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    navigate("/sign-in");
+  };
 
   const menuItems = [
     {
@@ -36,7 +41,6 @@ const AdminLayout = () => {
       label: "Courses",
       onClick: () => navigate("/admin/courses"),
     },
-
     {
       key: "student",
       icon: <UserOutlined />,
@@ -62,10 +66,6 @@ const AdminLayout = () => {
         width={200}
         style={{ background: "#001529" }}
       >
-        {/* <div className="text-white text-center py-4 text-xl font-bold">
-          {collapsed ? " " : "Admin"}
-        </div> */}
-
         <Menu
           theme="dark"
           mode="inline"
@@ -90,8 +90,18 @@ const AdminLayout = () => {
             onClick={() => setCollapsed(!collapsed)}
             style={{ fontSize: 18 }}
           />
-          {/* <Typography.Text strong>Admin Panel</Typography.Text> */}
-          {/* shuni o'rniga sign out qo'yamiz */}
+
+          {/* 👉 Log Out icon */}
+          <Tooltip title="Log out">
+            <LogoutOutlined
+              onClick={handleLogout}
+              style={{
+                fontSize: 20,
+                cursor: "pointer",
+                color: "#ff4d4f",
+              }}
+            />
+          </Tooltip>
         </Header>
 
         <Content

@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { authService } from "@service";
 import { useNavigate } from "react-router-dom";
 import { setItem } from "../../helpers";
-import { Button, Input, Select, Form, Typography, Card, message } from "antd";
-
+import { Button, Input, Select, Form, Typography, Card } from "antd";
+import { useAuth } from "../../hooks";
 const { Option } = Select;
 const { Title, Text } = Typography;
 
 const SignIn = () => {
+  const { mutate, isPending } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("admin");
@@ -15,18 +16,21 @@ const SignIn = () => {
 
   const submit = async () => {
     const payload = { email, password };
-    try {
-      const res = await authService.signIn(payload, role);
-      if (res?.status === 201) {
-        setItem("access_token", res.data.access_token);
-        setItem("role", role);
-        navigate(`/${role}`);
-      } else {
-        message.error("Login failed");
+    mutate(
+      {
+        data: payload,
+        role,
+      },
+      {
+        onSuccess: (res: any) => {
+          if (res.status === 201) {
+            setItem("access_token", res.data.access_token);
+            setItem("role", role);
+            navigate(`/${role}`);
+          }
+        },
       }
-    } catch (err) {
-      message.error("Something went wrong");
-    }
+    );
   };
 
   return (
@@ -85,7 +89,7 @@ const SignIn = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" block loading={isPending}>
               Sign In
             </Button>
           </Form.Item>

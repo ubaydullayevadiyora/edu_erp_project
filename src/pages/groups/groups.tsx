@@ -1,52 +1,47 @@
-import { useEffect, useState } from "react";
-import { groupService } from "../../service";
 import {
-  Space,
   Table,
   Button,
-  DatePicker,
-  Select,
   Form,
-  message,
   Modal,
   Input,
+  Select,
+  message,
+  DatePicker,
+  Space,
   Popconfirm,
 } from "antd";
+import { useEffect, useState } from "react";
+import { useGroup } from "../../hooks/useGroup";
+import { groupService } from "../../service";
 import type { Group } from "../../types";
 import type { Course } from "../../types/courses";
 import dayjs from "dayjs";
 
 const { Column } = Table;
-const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const Groups = () => {
-  const [groups, setGroups] = useState<Group[]>([]);
+  const { data, useGroupCreate, useGroupUpdate, useGroupDelete } = useGroup();
+  const { mutate: createGroup, isPending } = useGroupCreate();
+  const { mutate: updateGroup } = useGroupUpdate();
+  const { mutate: deleteGroup } = useGroupDelete();
+
   const [courses, setCourses] = useState<Course[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [editingGroup, setEditingGroup] = useState<Group | null>(null);
 
-  const fetchGroups = async () => {
-    try {
-      const response = await groupService.getGroups();
-      setGroups(response?.data?.data || []);
-    } catch (error) {
-      console.error("Error fetching groups:", error);
-    }
-  };
-
   const fetchCourses = async () => {
     try {
-      const response = await groupService.getCourses();
-      setCourses(response?.data?.courses || []);
-    } catch (error) {
-      console.error("Error fetching courses:", error);
+      const res = await groupService.getCourses();
+      setCourses(res?.data?.courses || []);
+    } catch (e) {
+      console.error(e);
     }
   };
 
   useEffect(() => {
-    fetchGroups();
     fetchCourses();
   }, []);
 
@@ -64,37 +59,39 @@ const Groups = () => {
       };
 
       if (editingGroup?.id) {
-        console.log("UPDATE group id:", editingGroup.id); 
-        await groupService.updateGroup(editingGroup.id, payload);
+        updateGroup(
+          { id: editingGroup.id, ...payload },
+          {
+            onSuccess: () => {
+              setIsModalOpen(false);
+              setEditingGroup(null);
+              form.resetFields();
+            },
+            onError: () => message.error("Tahrirlashda xatolik"),
+          }
+        );
       } else {
-        await groupService.createGroup(payload);
+        createGroup(payload, {
+          onSuccess: () => {
+            setIsModalOpen(false);
+            form.resetFields();
+          },
+          onError: () => message.error("Yaratishda xatolik"),
+        });
       }
-
-      fetchGroups();
-      setIsModalOpen(false);
-      setEditingGroup(null);
-      form.resetFields();
-    } catch (error) {
-      console.error("Error:", error);
-      message.error("Xatolik yuz berdi");
+    } catch (err) {
+      console.error(err);
     }
   };
-  
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setEditingGroup(null);
-    form.resetFields();
-  };
-
-  const handleDelete = async (id: number) => {
-    try {
-      await groupService.deleteGroup(id);
-      fetchGroups();
-    } catch (error) {
-      console.error("Error deleting group:", error);
-      message.error("O'chirishda xatolik yuz berdi");
-    }
+  const handleDelete = (id: number) => {
+    deleteGroup(id, {
+      onSuccess: () => {
+      },
+      onError: () => {
+        message.error("O'chirishda xatolik yuz berdi");
+      },
+    });
   };
 
   return (
@@ -102,6 +99,7 @@ const Groups = () => {
       <Button
         onClick={() => {
           setEditingGroup(null);
+          form.resetFields();
           setIsModalOpen(true);
         }}
         type="primary"
@@ -111,9 +109,9 @@ const Groups = () => {
       </Button>
 
       <Table<Group>
-        dataSource={groups}
+        dataSource={data?.data?.data || []}
+        loading={isPending}
         rowKey="id"
-        pagination={{ pageSize: 6 }}
       >
         <Column title="Group Name" dataIndex="name" key="name" />
         <Column title="Status" dataIndex="status" key="status" />
@@ -122,11 +120,10 @@ const Groups = () => {
         <Column
           title="Action"
           key="action"
-          render={(_: any, record: Group) => (
+          render={(_, record: Group) => (
             <Space size="middle">
               <a
                 onClick={() => {
-                  console.log("Edit bosildi, group id:", record.id);
                   setEditingGroup(record);
                   form.setFieldsValue({
                     name: record.name,
@@ -156,7 +153,10 @@ const Groups = () => {
         title={editingGroup ? "Groupni tahrirlash" : "Yangi Group yaratish"}
         open={isModalOpen}
         onOk={handleOk}
-        onCancel={handleCancel}
+        onCancel={() => {
+          setIsModalOpen(false);
+          setEditingGroup(null);
+        }}
         okText="Saqlash"
         cancelText="Bekor qilish"
       >
@@ -164,31 +164,21 @@ const Groups = () => {
           <Form.Item
             name="name"
             label="Group nomi"
-            rules={[{ required: true, message: "Group nomi majburiy" }]}
+            rules={[{ required: true }]}
           >
             <Input />
           </Form.Item>
-
-          <Form.Item
-            name="course_id"
-            label="Kurs"
-            rules={[{ required: true, message: "Kursni tanlang" }]}
-          >
-            <Select placeholder="Kursni tanlang" loading={courses.length === 0}>
+          <Form.Item name="course_id" label="Kurs" rules={[{ required: true }]}>
+            <Select placeholder="Kurs tanlang">
               {courses.map((course) => (
                 <Option key={course.id} value={course.id}>
-                  {course.title}{" "}
+                  {course.title}
                 </Option>
               ))}
             </Select>
           </Form.Item>
-
-          <Form.Item
-            name="status"
-            label="Holati"
-            rules={[{ required: true, message: "Statusni tanlang" }]}
-          >
-            <Select placeholder="Status tanlang">
+          <Form.Item name="status" label="Holat" rules={[{ required: true }]}>
+            <Select>
               <Option value="new">New</Option>
               <Option value="active">Active</Option>
               <Option value="cancelled">Cancelled</Option>
@@ -196,11 +186,10 @@ const Groups = () => {
               <Option value="completed">Completed</Option>
             </Select>
           </Form.Item>
-
           <Form.Item
             name="dates"
             label="Boshlanish va tugash sanasi"
-            rules={[{ required: true, message: "Sanani tanlang" }]}
+            rules={[{ required: true }]}
           >
             <RangePicker format="YYYY-MM-DD" />
           </Form.Item>

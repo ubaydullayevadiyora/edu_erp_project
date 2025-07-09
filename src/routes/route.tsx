@@ -9,6 +9,7 @@ import {
   StudentLayout,
   AdminLayout,
   Groups,
+  Courses,
 } from "@pages";
 
 const Router = () => {
@@ -22,6 +23,8 @@ const Router = () => {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="groups" replace />} />
           <Route path="groups" element={<Groups />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="student" element={<StudentLayout />} />
         </Route>
 
         {/* teacher layout */}

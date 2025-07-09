@@ -7,4 +7,7 @@ export class ApiUrls {
 
   // courses
   public static COURSES: string = "/courses";
+
+  // students
+  public static STUDENT: string = "/student";
 }

@@ -1,8 +1,12 @@
+import { Outlet } from "react-router-dom"
 
-const teacher = () => {
+const TeacherLayout= () => {
   return (
-    <div>teacher</div>
+    <div>
+      <h1>TeacherLayout</h1>
+      <Outlet/>
+    </div>
   )
 }
 
-export default teacher
+export default TeacherLayout
