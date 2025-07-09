@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setItem } from "../../helpers";
+import { setItem } from "@helpers";
 import { Button, Input, Select, Form, Typography, Card } from "antd";
 import { useAuth } from "../../hooks";
 const { Option } = Select;

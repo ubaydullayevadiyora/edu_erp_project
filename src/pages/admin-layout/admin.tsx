@@ -25,7 +25,7 @@ const AdminLayout = () => {
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    navigate("/sign-in");
+    navigate("/");
   };
 
   const menuItems = [

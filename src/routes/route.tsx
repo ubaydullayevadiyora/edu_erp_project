@@ -10,17 +10,33 @@ import {
   AdminLayout,
   Groups,
   Courses,
+  ProtectAuth,
 } from "@pages";
+import LoginProtect from "../pages/protect-layout/login-protect";
 
 const Router = () => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<App />}>
-        <Route index element={<SignIn />} />
+        <Route
+          index
+          element={
+            <LoginProtect>
+              <SignIn />
+            </LoginProtect>
+          }
+        />
         <Route path="sign-up" element={<SignUp />} />
 
         {/* admin layout */}
-        <Route path="admin" element={<AdminLayout />}>
+        <Route
+          path="admin"
+          element={
+            <ProtectAuth>
+              <AdminLayout />
+            </ProtectAuth>
+          }
+        >
           <Route index element={<Navigate to="groups" replace />} />
           <Route path="groups" element={<Groups />} />
           <Route path="courses" element={<Courses />} />

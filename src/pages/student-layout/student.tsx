@@ -8,8 +8,10 @@ import {
   Space,
   Table,
   message,
+  DatePicker,
 } from "antd";
 import { useState } from "react";
+import dayjs from "dayjs";
 import type { Student } from "../../types/student";
 import { useStudent } from "../../hooks/useStudent";
 import Column from "antd/es/table/Column";
@@ -40,21 +42,21 @@ const StudentLayout = () => {
         last_name: values.last_name,
         email: values.email,
         phone: values.phone,
+        password: values.password,
         gender: values.gender,
-        date_of_birth: values.date_of_birth,
+        date_of_birth: values.date_of_birth.format("YYYY-MM-DD"), 
       };
 
-      // Faqat create paytida password_hash kiritiladi
       if (!editingStudent) {
-        payload.password_hash = values.password_hash;
+        payload.password = values.password;
       }
+      
 
       if (editingStudent?.id) {
         updateStudent(
           { id: editingStudent.id, ...payload },
           {
             onSuccess: () => {
-              message.success("O'quvchi tahrirlandi");
               setIsModalOpen(false);
               setEditingStudent(null);
               form.resetFields();
@@ -65,7 +67,6 @@ const StudentLayout = () => {
       } else {
         createStudent(payload, {
           onSuccess: () => {
-            message.success("Yangi o'quvchi qo'shildi");
             setIsModalOpen(false);
             form.resetFields();
           },
@@ -122,7 +123,10 @@ const StudentLayout = () => {
               <a
                 onClick={() => {
                   setEditingStudent(record);
-                  form.setFieldsValue(record);
+                  form.setFieldsValue({
+                    ...record,
+                    date_of_birth: dayjs(record.date_of_birth), 
+                  });
                   setIsModalOpen(true);
                 }}
               >
@@ -205,10 +209,13 @@ const StudentLayout = () => {
             label="Tug'ilgan sana"
             rules={[{ required: true, message: "Tug'ilgan sana majburiy" }]}
           >
-            <Input placeholder="2005-06-15 kabi yozing" />
+            <DatePicker
+              format="YYYY-MM-DD"
+              style={{ width: "100%" }}
+              placeholder="Sana tanlang"
+            />
           </Form.Item>
 
-          {/* Faqat create paytida password kiritiladi */}
           {!editingStudent && (
             <Form.Item
               name="password_hash"

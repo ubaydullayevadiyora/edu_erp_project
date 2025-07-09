@@ -4,7 +4,7 @@ export interface Student {
   last_name: string;
   email: string;
   phone: string;
-//   password_hash: string;
+  password: string;
   gender: string;
   date_of_birth: string;
 }
