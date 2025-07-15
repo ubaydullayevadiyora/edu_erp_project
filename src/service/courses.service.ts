@@ -1,10 +1,10 @@
-import { ApiUrls } from "../api/api-urls";
-import { apiConfig } from "../api/config";
-import type { Course } from "../types";
+import { ApiUrls } from "@api/api-urls";
+import { apiConfig } from "@api/config";
+import type { Course, ParamsType } from "@types";
 
 export const courseService = {
-  async getCourses() {
-    const res = await apiConfig().getRequest(ApiUrls.COURSES);
+  async getCourses(params: ParamsType) {
+    const res = await apiConfig().getRequest(ApiUrls.COURSES, params);
     return res;
   },
 

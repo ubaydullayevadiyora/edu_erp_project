@@ -9,3 +9,7 @@ export function setItem(key: string, value: string) {
 export function removeItem(key: string) {
   localStorage.removeItem(key);
 }
+
+export function clearStorage() {
+  localStorage.clear();
+}

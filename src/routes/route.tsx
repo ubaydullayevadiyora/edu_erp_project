@@ -1,4 +1,8 @@
-import { createRoutesFromElements, Navigate, RouterProvider } from "react-router-dom";
+import {
+  createRoutesFromElements,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { createBrowserRouter, Route } from "react-router-dom";
 import App from "../App";
 import {
@@ -10,9 +14,9 @@ import {
   AdminLayout,
   Groups,
   Courses,
-  ProtectAuth,
+  LayoutProtect,
+  LoginProtect,
 } from "@pages";
-import LoginProtect from "../pages/protect-layout/login-protect";
 
 const Router = () => {
   const router = createBrowserRouter(
@@ -32,9 +36,9 @@ const Router = () => {
         <Route
           path="admin"
           element={
-            <ProtectAuth>
+            <LayoutProtect>
               <AdminLayout />
-            </ProtectAuth>
+            </LayoutProtect>
           }
         >
           <Route index element={<Navigate to="groups" replace />} />

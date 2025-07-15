@@ -8,9 +8,11 @@ import {
   Input,
   Popconfirm,
   InputNumber,
+  Select,
   } from "antd";
 import type { Course } from "../../types/courses";
 import { courseService } from "../../service/courses.service";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const { Column } = Table;
 
@@ -85,7 +87,7 @@ const Courses = () => {
         type="primary"
         style={{ marginBottom: 16 }}
       >
-        Yangi kurs yaratish
+        add new course
       </Button>
 
       <Table<Course>
@@ -138,15 +140,17 @@ const Courses = () => {
                   setIsModalOpen(true);
                 }}
               >
-                Edit
+                <EditOutlined />
               </a>
               <Popconfirm
-                title="Bu kurs o'chirilsinmi?"
+                title="Are you sure you want to delete this course?"
                 onConfirm={() => handleDelete(record.id)}
-                okText="Ha"
-                cancelText="Yo'q"
+                okText="Yes"
+                cancelText="No"
               >
-                <a style={{ color: "red" }}>Delete</a>
+                <a style={{ color: "red" }}>
+                  <DeleteOutlined />
+                </a>
               </Popconfirm>
             </Space>
           )}
@@ -154,17 +158,17 @@ const Courses = () => {
       </Table>
 
       <Modal
-        title={editingCourse ? "Courseni tahrirlash" : "Yangi Course yaratish"}
+        title={editingCourse ? "Editing course" : "add new course"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        okText="Saqlash"
-        cancelText="Bekor qilish"
+        okText="Save"
+        cancelText="Cancel"
       >
         <Form form={form} layout="vertical">
           <Form.Item
             name="title"
-            label="Course nomi"
+            label="Course name"
             rules={[{ required: true, message: "Course nomi majburiy" }]}
           >
             <Input />
@@ -172,7 +176,7 @@ const Courses = () => {
 
           <Form.Item
             name="description"
-            label="Tavsifi"
+            label="Description"
             rules={[{ required: true, message: "Tavsif majburiy" }]}
           >
             <Input />
@@ -180,7 +184,7 @@ const Courses = () => {
 
           <Form.Item
             name="price"
-            label="Narxi ($)"
+            label="Price($)"
             rules={[{ required: true, message: "Narx majburiy" }]}
           >
             <InputNumber min={0} style={{ width: "100%" }} />
@@ -188,28 +192,45 @@ const Courses = () => {
 
           <Form.Item
             name="duration"
-            label="Davomiyligi"
+            label="Duration (month)"
             rules={[{ required: true, message: "Davomiylik majburiy" }]}
           >
-            <Input />
+            <Select placeholder="select duration">
+              {[2, 4, 6, 8].map((oy) => (
+                <Select.Option key={oy} value={oy}>
+                  {oy} month
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
             name="lessons_in_a_week"
-            label="Haftasiga necha dars"
+            label="lesson in a week"
             rules={[{ required: true, message: "Son majburiy" }]}
           >
-            <InputNumber min={1} max={7} style={{ width: "100%" }} />
+            <Select placeholder="Select">
+              {[3, 5, 7].map((son) => (
+                <Select.Option key={son} value={son}>
+                  {son} times
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
             name="lesson_duration"
-            label="Har bir dars davomiyligi"
+            label="Lesson duration"
             rules={[{ required: true, message: "Dars davomiyligi majburiy" }]}
           >
-            <Input />
+            <Select placeholder="Select lesson duration">
+              {[120, 240].map((min) => (
+                <Select.Option key={min} value={min}>
+                  {min / 60} hour
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
-
         </Form>
       </Modal>
     </>

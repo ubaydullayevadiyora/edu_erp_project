@@ -3,27 +3,31 @@ import {
   Form,
   Input,
   Modal,
-  Popconfirm,
   Select,
   Space,
   Table,
-  message,
   DatePicker,
 } from "antd";
-import { useState } from "react";
-import dayjs from "dayjs";
-import type { Student } from "../../types/student";
-import { useStudent } from "../../hooks/useStudent";
+import { EditOutlined } from "@ant-design/icons";
 import Column from "antd/es/table/Column";
+import dayjs from "dayjs";
+import { useState } from "react";
+import type { Student } from "@types";
+import { useStudent } from "@hooks";
+import PopConfirm from "../../components/pop-confirm";
+import { usePagination } from "../../hooks/usePagination";
 
 const StudentLayout = () => {
+  const { current, pageSize, pagination } = usePagination();
   const {
     data,
     isLoading,
     useStudentCreate,
     useStudentUpdate,
     useStudentDelete,
-  } = useStudent();
+  } = useStudent({ page: current, limit: pageSize });
+
+  const total = data?.data?.total || 0;
 
   const { mutate: createStudent } = useStudentCreate();
   const { mutate: updateStudent } = useStudentUpdate();
@@ -44,13 +48,12 @@ const StudentLayout = () => {
         phone: values.phone,
         password: values.password,
         gender: values.gender,
-        date_of_birth: values.date_of_birth.format("YYYY-MM-DD"), 
+        date_of_birth: values.date_of_birth.format("YYYY-MM-DD"),
       };
 
       if (!editingStudent) {
         payload.password = values.password;
       }
-      
 
       if (editingStudent?.id) {
         updateStudent(
@@ -61,7 +64,6 @@ const StudentLayout = () => {
               setEditingStudent(null);
               form.resetFields();
             },
-            onError: () => message.error("Tahrirlashda xatolik"),
           }
         );
       } else {
@@ -70,7 +72,6 @@ const StudentLayout = () => {
             setIsModalOpen(false);
             form.resetFields();
           },
-          onError: () => message.error("Yaratishda xatolik"),
         });
       }
     } catch (err) {
@@ -79,10 +80,7 @@ const StudentLayout = () => {
   };
 
   const handleDelete = (id: number) => {
-    deleteStudent(id, {
-      onSuccess: () => message.success("O'quvchi o'chirildi"),
-      onError: () => message.error("O'chirishda xatolik"),
-    });
+    deleteStudent(id);
   };
 
   return (
@@ -96,27 +94,27 @@ const StudentLayout = () => {
         type="primary"
         style={{ marginBottom: 16 }}
       >
-        Yangi O'quvchi qo'shish
+        add new student
       </Button>
 
       <Table<Student>
         dataSource={data?.data?.students || []}
         rowKey="id"
         loading={isLoading}
-        pagination={{ pageSize: 6 }}
+        pagination={{ ...pagination, total }}
       >
-        <Column title="Ism" dataIndex="first_name" key="first_name" />
-        <Column title="Familiya" dataIndex="last_name" key="last_name" />
+        <Column title="Firstname" dataIndex="first_name" key="first_name" />
+        <Column title="Lastname" dataIndex="last_name" key="last_name" />
         <Column title="Email" dataIndex="email" key="email" />
-        <Column title="Telefon" dataIndex="phone" key="phone" />
-        <Column title="Jinsi" dataIndex="gender" key="gender" />
+        <Column title="Phone Number" dataIndex="phone" key="phone" />
+        <Column title="Gender" dataIndex="gender" key="gender" />
         <Column
-          title="Tug'ilgan sana"
+          title="Date of Birth"
           dataIndex="date_of_birth"
           key="date_of_birth"
         />
         <Column
-          title="Amallar"
+          title="Action"
           key="action"
           render={(_, record: Student) => (
             <Space size="middle">
@@ -125,45 +123,37 @@ const StudentLayout = () => {
                   setEditingStudent(record);
                   form.setFieldsValue({
                     ...record,
-                    date_of_birth: dayjs(record.date_of_birth), 
+                    date_of_birth: dayjs(record.date_of_birth),
                   });
                   setIsModalOpen(true);
                 }}
               >
-                Tahrirlash
+                <EditOutlined />
               </a>
-              <Popconfirm
-                title="Bu o'quvchini o'chirmoqchimisiz?"
-                onConfirm={() => handleDelete(record.id)}
-                okText="Ha"
-                cancelText="Yo'q"
-              >
-                <a style={{ color: "red" }}>O'chirish</a>
-              </Popconfirm>
+              <PopConfirm
+                handleDelete={() => handleDelete(record.id)}
+                loading={isLoading}
+              />
             </Space>
           )}
         />
       </Table>
 
       <Modal
-        title={
-          editingStudent
-            ? "O'quvchi ma'lumotlarini tahrirlash"
-            : "Yangi o'quvchi yaratish"
-        }
+        title={editingStudent ? "edit student" : "add student"}
         open={isModalOpen}
         onOk={handleOk}
         onCancel={() => {
           setIsModalOpen(false);
           setEditingStudent(null);
         }}
-        okText="Saqlash"
-        cancelText="Bekor qilish"
+        okText="Save"
+        cancelText="Cancel"
       >
         <Form form={form} layout="vertical">
           <Form.Item
             name="first_name"
-            label="Ism"
+            label="Firstname"
             rules={[{ required: true, message: "Ism majburiy" }]}
           >
             <Input />
@@ -171,7 +161,7 @@ const StudentLayout = () => {
 
           <Form.Item
             name="last_name"
-            label="Familiya"
+            label="Lastname"
             rules={[{ required: true, message: "Familiya majburiy" }]}
           >
             <Input />
@@ -187,7 +177,7 @@ const StudentLayout = () => {
 
           <Form.Item
             name="phone"
-            label="Telefon"
+            label="Phone Number"
             rules={[{ required: true, message: "Telefon raqam majburiy" }]}
           >
             <Input />
@@ -195,18 +185,18 @@ const StudentLayout = () => {
 
           <Form.Item
             name="gender"
-            label="Jinsi"
+            label="Gender"
             rules={[{ required: true, message: "Jins majburiy" }]}
           >
             <Select>
-              <Select.Option value="male">Erkak</Select.Option>
-              <Select.Option value="female">Ayol</Select.Option>
+              <Select.Option value="male">Male</Select.Option>
+              <Select.Option value="female">Female</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
             name="date_of_birth"
-            label="Tug'ilgan sana"
+            label="Date of Birth"
             rules={[{ required: true, message: "Tug'ilgan sana majburiy" }]}
           >
             <DatePicker
@@ -219,7 +209,7 @@ const StudentLayout = () => {
           {!editingStudent && (
             <Form.Item
               name="password_hash"
-              label="Parol"
+              label="Password"
               rules={[{ required: true, message: "Parol majburiy" }]}
             >
               <Input.Password />

@@ -1,200 +1,104 @@
-import {
-  Table,
-  Button,
-  Form,
-  Modal,
-  Input,
-  Select,
-  message,
-  DatePicker,
-  Space,
-  Popconfirm,
-} from "antd";
+import { Button, Table, Space, type TablePaginationConfig } from "antd";
+import { EditOutlined } from "@ant-design/icons";
+import { useGeneral, useGroup } from "@hooks";
+import type { Group } from "@types";
 import { useEffect, useState } from "react";
-import { useGroup } from "../../hooks/useGroup";
-import { groupService } from "../../service";
-import type { Group } from "../../types";
-import type { Course } from "../../types/courses";
-import dayjs from "dayjs";
-
-const { Column } = Table;
-const { Option } = Select;
-const { RangePicker } = DatePicker;
+import { useLocation } from "react-router-dom";
+import GroupModal from "./modal";
+import PopConfirm from "../../components/pop-confirm";
+import {GroupColumns } from "../../components/groupColumn";
 
 const Groups = () => {
-  const { data, useGroupCreate, useGroupUpdate, useGroupDelete } = useGroup();
-  const { mutate: createGroup, isPending } = useGroupCreate();
-  const { mutate: updateGroup } = useGroupUpdate();
-  const { mutate: deleteGroup } = useGroupDelete();
+  const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState<Group | null>(null);
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 10,
+  });
 
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm();
-  const [editingGroup, setEditingGroup] = useState<Group | null>(null);
-
-  const fetchCourses = async () => {
-    try {
-      const res = await groupService.getCourses();
-      setCourses(res?.data?.courses || []);
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  const location = useLocation();
 
   useEffect(() => {
-    fetchCourses();
-  }, []);
+    const searchParams = new URLSearchParams(location.search);
+    const page = searchParams.get("page");
+    const limit = searchParams.get("limit");
+    if (page && limit) {
+      setParams(() => ({
+        page: Number(page),
+        limit: Number(limit),
+      }));
+    }
+  }, [location.search]);
 
-  const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      const [startDate, endDate] = values.dates;
+  const { data, useGroupDelete } = useGroup(params);
+  const { handlePagination } = useGeneral();
+  const { mutate: deleteFn, isPending: isDeleting } = useGroupDelete();
 
-      const payload: Omit<Group, "id"> = {
-        name: values.name,
-        course_id: parseInt(values.course_id),
-        status: values.status,
-        start_date: dayjs(startDate).format("YYYY-MM-DD"),
-        end_date: dayjs(endDate).format("YYYY-MM-DD"),
-      };
+  const deleteItem = (id: number) => {
+    deleteFn(id);
+  };
 
-      if (editingGroup?.id) {
-        updateGroup(
-          { id: editingGroup.id, ...payload },
-          {
-            onSuccess: () => {
-              setIsModalOpen(false);
-              setEditingGroup(null);
-              form.resetFields();
-            },
-            onError: () => message.error("Tahrirlashda xatolik"),
-          }
-        );
-      } else {
-        createGroup(payload, {
-          onSuccess: () => {
-            setIsModalOpen(false);
-            form.resetFields();
-          },
-          onError: () => message.error("Yaratishda xatolik"),
-        });
-      }
-    } catch (err) {
-      console.error(err);
+  const editItem = (record: Group) => {
+    setUpdate(record);
+    setOpen(true);
+  };
+
+  const toggle = () => {
+    setOpen(!open);
+    if (update) {
+      setUpdate(null);
     }
   };
 
-  const handleDelete = (id: number) => {
-    deleteGroup(id, {
-      onSuccess: () => {
-      },
-      onError: () => {
-        message.error("O'chirishda xatolik yuz berdi");
-      },
-    });
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    handlePagination({ pagination, setParams });
   };
+
+  const columns = [
+    ...(GroupColumns ?? []),
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: Group) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => editItem(record)}>
+            <EditOutlined />
+          </Button>
+          <PopConfirm
+            handleDelete={() => deleteItem(record.id!)}
+            loading={isDeleting}
+          />
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <>
-      <Button
-        onClick={() => {
-          setEditingGroup(null);
-          form.resetFields();
-          setIsModalOpen(true);
-        }}
-        type="primary"
-        style={{ marginBottom: 16 }}
-      >
-        Yangi group yaratish
-      </Button>
-
-      <Table<Group>
-        dataSource={data?.data?.data || []}
-        loading={isPending}
-        rowKey="id"
-      >
-        <Column title="Group Name" dataIndex="name" key="name" />
-        <Column title="Status" dataIndex="status" key="status" />
-        <Column title="Start Date" dataIndex="start_date" key="start_date" />
-        <Column title="End Date" dataIndex="end_date" key="end_date" />
-        <Column
-          title="Action"
-          key="action"
-          render={(_, record: Group) => (
-            <Space size="middle">
-              <a
-                onClick={() => {
-                  setEditingGroup(record);
-                  form.setFieldsValue({
-                    name: record.name,
-                    course_id: record.course_id,
-                    status: record.status,
-                    dates: [dayjs(record.start_date), dayjs(record.end_date)],
-                  });
-                  setIsModalOpen(true);
-                }}
-              >
-                Edit
-              </a>
-              <Popconfirm
-                title="Bu group o'chirilsinmi?"
-                onConfirm={() => handleDelete(record.id)}
-                okText="Ha"
-                cancelText="Yo'q"
-              >
-                <a style={{ color: "red" }}>Delete</a>
-              </Popconfirm>
-            </Space>
-          )}
+      {open && (
+        <GroupModal
+          open={open}
+          toggle={toggle}
+          update={update}
         />
-      </Table>
-
-      <Modal
-        title={editingGroup ? "Groupni tahrirlash" : "Yangi Group yaratish"}
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={() => {
-          setIsModalOpen(false);
-          setEditingGroup(null);
+      )}
+      {/* <h1>GROUPS</h1> */}
+      <Button type="primary" onClick={() => setOpen(true)}>
+        add group
+      </Button>
+      <Table<Group>
+        columns={columns}
+        dataSource={data?.data?.data}
+        rowKey={(row) => row.id!}
+        pagination={{
+          current: params.page,
+          pageSize: params.limit,
+          total: data?.data?.total,
+          showSizeChanger: true,
+          pageSizeOptions: ["4", "5", "6", "7", "10"],
         }}
-        okText="Saqlash"
-        cancelText="Bekor qilish"
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Group nomi"
-            rules={[{ required: true }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="course_id" label="Kurs" rules={[{ required: true }]}>
-            <Select placeholder="Kurs tanlang">
-              {courses.map((course) => (
-                <Option key={course.id} value={course.id}>
-                  {course.title}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="status" label="Holat" rules={[{ required: true }]}>
-            <Select>
-              <Option value="new">New</Option>
-              <Option value="active">Active</Option>
-              <Option value="cancelled">Cancelled</Option>
-              <Option value="pending">Pending</Option>
-              <Option value="completed">Completed</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="dates"
-            label="Boshlanish va tugash sanasi"
-            rules={[{ required: true }]}
-          >
-            <RangePicker format="YYYY-MM-DD" />
-          </Form.Item>
-        </Form>
-      </Modal>
+        onChange={handleTableChange}
+      />
     </>
   );
 };

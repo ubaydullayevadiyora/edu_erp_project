@@ -1,33 +1,34 @@
 import { apiConfig } from "@api/config";
 import { ApiUrls } from "@api/api-urls";
-import { type Group } from "@types";
+import { type Group, type ParamsType } from "@types";
 
 export const groupService = {
-  async getGroups() {
-    const res = await apiConfig().getRequest(ApiUrls.GROUPS);
+
+  async getGroups(params: ParamsType) {
+    const res = await apiConfig().getRequest(ApiUrls.GROUPS, params);
     return res;
   },
 
-  async createGroup(model: Omit<Group, "id">): Promise<any> {
+  async getGroupStudents(params: ParamsType, id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.GROUPS}/${id}`, params);
+    return res;
+  },
+
+  async createGroup(model: Group): Promise<any> {
     const res = await apiConfig().postRequest(ApiUrls.GROUPS, model);
     return res;
   },
 
-  async updateGroup(id: number, model: Omit<Group, "id">): Promise<any> {
+  async updateGroup(model: Group): Promise<any> {
     const res = await apiConfig().patchRequest(
-      `${ApiUrls.GROUPS}/${id}`,
+      `${ApiUrls.GROUPS}/${model.id}`,
       model
     );
     return res;
   },
-
+  
   async deleteGroup(id: number): Promise<any> {
     const res = await apiConfig().deleteRequest(`${ApiUrls.GROUPS}/${id}`);
-    return res;
-  },
-
-  async getCourses() {
-    const res = await apiConfig().getRequest(ApiUrls.COURSES);
     return res;
   },
 };

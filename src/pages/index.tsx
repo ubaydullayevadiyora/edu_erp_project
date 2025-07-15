@@ -8,7 +8,8 @@ const TeacherLayout = lazy(() => import("./teacher-layout/teacher"));
 const AdminLayout = lazy(() => import("./admin-layout/admin"));
 const Groups = lazy(() => import("./groups/groups"));
 const Courses = lazy(() => import("./courses/courses"));
-const ProtectAuth = lazy(()=> import("./protect-layout/protect-auth"))
+const LayoutProtect = lazy(() => import("./protect-routes/layout-protect"));
+const LoginProtect = lazy(() => import("./protect-routes/login-protect"));
 
 export {
   SignIn,
@@ -19,5 +20,6 @@ export {
   AdminLayout,
   Groups,
   Courses,
-  ProtectAuth,
+  LayoutProtect,
+  LoginProtect,
 };
