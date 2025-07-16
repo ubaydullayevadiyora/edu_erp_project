@@ -45,6 +45,7 @@ const Router = () => {
           <Route path="groups" element={<Groups />} />
           <Route path="courses" element={<Courses />} />
           <Route path="student" element={<StudentLayout />} />
+          <Route path="teacher" element={<TeacherLayout />} />
         </Route>
 
         {/* teacher layout */}

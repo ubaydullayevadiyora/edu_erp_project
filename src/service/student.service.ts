@@ -1,14 +1,22 @@
-import { ApiUrls } from "../api/api-urls";
-import { apiConfig } from "../api/config";
-import type { Student } from "../types/student";
+import { apiConfig } from "@api/config";
+import { ApiUrls } from "@api/api-urls";
+import { type Student, type ParamsType } from "@types";
 
 export const studentService = {
-  async getStudents() {
-    const res = await apiConfig().getRequest(ApiUrls.STUDENT);
+  async getStudents(params: ParamsType) {
+    const res = await apiConfig().getRequest(ApiUrls.STUDENT, params);
     return res;
   },
 
-  async createStudent(model: Omit<Student, "id">): Promise<any> {
+  async getStudentStudents(params: ParamsType, id: number) {
+    const res = await apiConfig().getRequest(
+      `${ApiUrls.STUDENT}/${id}`,
+      params
+    );
+    return res;
+  },
+
+  async createStudent(model: Student): Promise<any> {
     const res = await apiConfig().postRequest(ApiUrls.STUDENT, model);
     return res;
   },

@@ -4,16 +4,16 @@ import { useGeneral, useGroup } from "@hooks";
 import type { Group } from "@types";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import GroupModal from "./modal";
+import GroupModal from "./group-modal";
 import PopConfirm from "../../components/pop-confirm";
-import {GroupColumns } from "../../components/groupColumn";
+import { GroupColumns } from "../../components/table-columns";
 
 const Groups = () => {
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState<Group | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 10,
+    limit: 6,
   });
 
   const location = useLocation();
@@ -75,13 +75,7 @@ const Groups = () => {
 
   return (
     <>
-      {open && (
-        <GroupModal
-          open={open}
-          toggle={toggle}
-          update={update}
-        />
-      )}
+      {open && <GroupModal open={open} toggle={toggle} update={update} />}
       {/* <h1>GROUPS</h1> */}
       <Button type="primary" onClick={() => setOpen(true)}>
         add group

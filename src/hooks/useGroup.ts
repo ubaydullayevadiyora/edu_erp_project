@@ -3,17 +3,17 @@ import { groupService } from "@service";
 import { type Group, type ParamsType } from "@types";
 
 export const useGroup = (params: ParamsType, id?: number) => {
+
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["groups", params],
     queryFn: async () => groupService.getGroups(params),
   });
-
+  
   const groupStudentsQuery = useQuery({
     queryKey: ["group-students", params],
     queryFn: async () => groupService.getGroupStudents(params, id!),
   });
-
   const students = groupStudentsQuery.data;
 
   // Mutations
@@ -25,16 +25,14 @@ export const useGroup = (params: ParamsType, id?: number) => {
       },
     });
   };
-
   const useGroupUpdate = () => {
     return useMutation({
-      mutationFn: async (data: Group) => groupService.updateGroup(data),
+      mutationFn: async ({id, ...rest}:Group) => groupService.updateGroup(id, rest),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["groups"] });
       },
     });
   };
-
   const useGroupDelete = () => {
     return useMutation({
       mutationFn: async (id: number) => groupService.deleteGroup(id),
@@ -43,6 +41,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
       },
     });
   };
+
 
   return {
     data,

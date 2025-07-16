@@ -1,13 +1,19 @@
-import { ApiUrls } from "../api/api-urls";
-import { apiConfig } from "../api/config";
+import { apiConfig } from "@api/config";
+import { ApiUrls } from "@api/api-urls";
+import { type Teacher, type ParamsType } from "@types";
 
 export const teacherService = {
-  async getTeachers() {
-    const res = await apiConfig().getRequest(ApiUrls.TEACHER);
+  async getTeachers(params: ParamsType) {
+    const res = await apiConfig().getRequest(ApiUrls.TEACHER, params);
     return res;
   },
 
-  async createTeacher(model: Omit<Teacher, "id">): Promise<any> {
+  async getTeacherStudents(params: ParamsType, id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.TEACHER}/${id}`, params);
+    return res;
+  },
+
+  async createTeacher(model: Teacher): Promise<any> {
     const res = await apiConfig().postRequest(ApiUrls.TEACHER, model);
     return res;
   },

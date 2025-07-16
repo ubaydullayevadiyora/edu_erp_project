@@ -1,2 +1,2 @@
-export * from './pop-confirm'
-export * from './groupColumn'
+export * from "./pop-confirm";
+export * from "./table-columns";

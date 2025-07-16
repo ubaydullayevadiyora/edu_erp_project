@@ -3,7 +3,6 @@ import { ApiUrls } from "@api/api-urls";
 import { type Group, type ParamsType } from "@types";
 
 export const groupService = {
-
   async getGroups(params: ParamsType) {
     const res = await apiConfig().getRequest(ApiUrls.GROUPS, params);
     return res;
@@ -19,14 +18,14 @@ export const groupService = {
     return res;
   },
 
-  async updateGroup(model: Group): Promise<any> {
+  async updateGroup(id: number, model: Omit<Group, "id">): Promise<any> {
     const res = await apiConfig().patchRequest(
-      `${ApiUrls.GROUPS}/${model.id}`,
+      `${ApiUrls.GROUPS}/${id}`,
       model
     );
     return res;
   },
-  
+
   async deleteGroup(id: number): Promise<any> {
     const res = await apiConfig().deleteRequest(`${ApiUrls.GROUPS}/${id}`);
     return res;
