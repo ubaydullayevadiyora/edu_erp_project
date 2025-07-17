@@ -16,6 +16,7 @@ import {
   Courses,
   LayoutProtect,
   LoginProtect,
+  BranchLayout,
 } from "@pages";
 
 const Router = () => {
@@ -46,6 +47,7 @@ const Router = () => {
           <Route path="courses" element={<Courses />} />
           <Route path="student" element={<StudentLayout />} />
           <Route path="teacher" element={<TeacherLayout />} />
+          <Route path="branches" element={<BranchLayout />} />
         </Route>
 
         {/* teacher layout */}

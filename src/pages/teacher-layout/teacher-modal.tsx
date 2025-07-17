@@ -4,10 +4,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import type { ModalProps, Teacher } from "@types";
 import { teacherFormSchema } from "@utils";
-import { useTeacher } from "@hooks";
+import { useBranch, useTeacher } from "@hooks";
 
 interface TeacherProps extends ModalProps {
-  update: (Teacher & { id?: number }) | null;
+  update: Teacher | null;
 }
 
 const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
@@ -15,6 +15,7 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
   const { useTeacherCreate, useTeacherUpdate } = useTeacher(params);
   const { mutate: createFn, isPending: isCreating } = useTeacherCreate();
   const { mutate: updateFn, isPending: isUpdating } = useTeacherUpdate();
+  const { data } = useBranch({ page: 1, limit: 6 });
 
   const {
     control,
@@ -23,9 +24,8 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
     setValue,
     reset,
   } = useForm({
-    resolver: yupResolver(teacherFormSchema, {
-      context: { isUpdate: !!update },
-    }),
+    resolver: yupResolver(teacherFormSchema),
+    context: { isUpdate: !!update },
     defaultValues: {
       first_name: "",
       last_name: "",
@@ -33,6 +33,7 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
       password: "",
       phone: "",
       role: "teacher",
+      branchId: undefined,
     },
   });
 
@@ -43,12 +44,16 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
       setValue("email", update.email);
       setValue("phone", update.phone);
       setValue("role", update.role);
+      const branchIds = update.branches?.map((branch:any) => branch.id) || [];
+      setValue("branchId", branchIds);
     } else {
       reset();
     }
   }, [update, setValue, reset]);
 
   const onSubmit = (data: any) => {
+    console.log("teacher data", data);
+    
     if (update?.id) {
       updateFn({ ...data, id: update.id });
       console.log("Update teacher", { ...data, id: update.id });
@@ -151,9 +156,34 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
                 {...field}
                 placeholder="Select role"
                 options={[
-                  { value: "teacher", label: "Teacher" },
+                  { value: "main teacher", label: "Main Teacher" },
+                  { value: "assistant teacher", label: "Assistant Teacher" },
                   { value: "admin", label: "Admin" },
                 ]}
+              />
+            )}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Branches"
+          validateStatus={errors.branchId ? "error" : ""}
+          help={errors.branchId?.message}
+        >
+          <Controller
+            name="branchId"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                mode="multiple"
+                showSearch
+                placeholder="Search branch"
+                optionFilterProp="label"
+                options={(data?.data?.branch ?? []).map((branch: any) => ({
+                  value: branch.id,
+                  label: branch.name,
+                }))}
               />
             )}
           />

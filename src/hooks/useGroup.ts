@@ -13,6 +13,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
   const groupStudentsQuery = useQuery({
     queryKey: ["group-students", params],
     queryFn: async () => groupService.getGroupStudents(params, id!),
+    enabled:!id
   });
   const students = groupStudentsQuery.data;
 

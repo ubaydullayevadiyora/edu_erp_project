@@ -79,7 +79,7 @@ const Students = () => {
       </Button>
       <Table<Student>
         columns={columns}
-        dataSource={data?.data?.data}
+        dataSource={data?.data?.students}
         rowKey={(row) => row.id}
         pagination={{
           current: params.page,

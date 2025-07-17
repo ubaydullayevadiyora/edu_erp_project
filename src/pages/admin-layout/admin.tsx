@@ -8,6 +8,8 @@ import {
   UserOutlined,
   PaperClipOutlined,
   LogoutOutlined,
+  UserSwitchOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme, Tooltip } from "antd";
 
@@ -46,6 +48,18 @@ const AdminLayout = () => {
       icon: <UserOutlined />,
       label: "Student",
       onClick: () => navigate("/admin/student"),
+    },
+    {
+      key: "teacher",
+      icon: <UserSwitchOutlined />,
+      label: "Teacher",
+      onClick: () => navigate("/admin/teacher"),
+    },
+    {
+      key: "branches",
+      icon: <AppstoreOutlined />,
+      label: "Branches",
+      onClick: () => navigate("/admin/branches"),
     },
     {
       key: "settings",
@@ -96,7 +110,7 @@ const AdminLayout = () => {
             <LogoutOutlined
               onClick={handleLogout}
               style={{
-                fontSize: 20,
+                fontSize: 15,
                 cursor: "pointer",
                 color: "#ff4d4f",
               }}

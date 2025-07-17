@@ -73,7 +73,6 @@ export const studentFormSchema = yup.object().shape({
   date_of_birth: yup.date().nullable().required("Date of birth is required"),
 });
 
-
 // teacher
 export const teacherFormSchema = yup.object().shape({
   first_name: yup.string().required("First name is required"),
@@ -92,4 +91,20 @@ export const teacherFormSchema = yup.object().shape({
     .required("Phone number is required")
     .matches(/^(\+998)?[0-9]{9,12}$/, "Phone number is invalid"),
   role: yup.string().required("Role is required"),
+
+  branchId: yup.array().of(yup.number()).required("Select Branch"),
+});
+
+// branches
+export const branchFormSchema = yup.object().shape({
+  name: yup.string().required("Branch name is required"),
+
+  address: yup.string().required("Address is required"),
+
+  call_number: yup
+    .string()
+    .required("Call number is required")
+    .matches(/^(\+998)?[0-9]{9,12}$/, "Call number is invalid"),
+
+  
 });

@@ -1,16 +1,16 @@
 import { Button, Table, Space, type TablePaginationConfig } from "antd";
 import { EditOutlined } from "@ant-design/icons";
-import { useGeneral, useTeacher } from "@hooks";
-import type { Teacher } from "@types";
+import { useGeneral, useBranch } from "@hooks";
+import type { Branch } from "@types";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import TeacherModal from "./teacher-modal";
+import BranchModal from "./branch-modal";
 import PopConfirm from "../../components/pop-confirm";
-import { TeacherColumns } from "@components";
+import { BranchColumns } from "../../components/table-columns";
 
-const Teachers = () => {
+const Branch = () => {
   const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState<Teacher | null>(null);
+  const [update, setUpdate] = useState<Branch | null>(null);
   const [params, setParams] = useState({
     page: 1,
     limit: 6,
@@ -23,29 +23,31 @@ const Teachers = () => {
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
     if (page && limit) {
-      setParams({
+      setParams(() => ({
         page: Number(page),
         limit: Number(limit),
-      });
+      }));
     }
   }, [location.search]);
 
-  const { data, useTeacherDelete } = useTeacher(params);
-  const { mutate: deleteFn, isPending: isDeleting } = useTeacherDelete();
+  const { data, useBranchDelete } = useBranch(params);
   const { handlePagination } = useGeneral();
+  const { mutate: deleteFn, isPending: isDeleting } = useBranchDelete();
 
   const deleteItem = (id: number) => {
     deleteFn(id);
   };
 
-  const editItem = (record: Teacher & { id: number }) => {
+  const editItem = (record: Branch) => {
     setUpdate(record);
     setOpen(true);
   };
 
   const toggle = () => {
     setOpen(!open);
-    if (update) setUpdate(null);
+    if (update) {
+      setUpdate(null);
+    }
   };
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
@@ -53,17 +55,17 @@ const Teachers = () => {
   };
 
   const columns = [
-    ...(TeacherColumns ?? []),
+    ...(BranchColumns ?? []),
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: Teacher) => (
+      render: (_: any, record: Branch) => (
         <Space size="middle">
           <Button type="primary" onClick={() => editItem(record)}>
             <EditOutlined />
           </Button>
           <PopConfirm
-            handleDelete={() => deleteItem(record.id)}
+            handleDelete={() => deleteItem(record.id!)}
             loading={isDeleting}
           />
         </Space>
@@ -73,20 +75,21 @@ const Teachers = () => {
 
   return (
     <>
-      {open && <TeacherModal open={open} toggle={toggle} update={update} />}
+      {open && <BranchModal open={open} toggle={toggle} update={update} />}
+      {/* <h1>GROUPS</h1> */}
       <Button type="primary" onClick={() => setOpen(true)}>
-        Add Teacher
+        add branch
       </Button>
-      <Table<Teacher>
+      <Table<Branch>
         columns={columns}
-        dataSource={data?.data?.teachers}
+        dataSource={data?.data?.branch}
         rowKey={(row) => row.id!}
         pagination={{
           current: params.page,
           pageSize: params.limit,
           total: data?.data?.total,
           showSizeChanger: true,
-          pageSizeOptions: ["4", "6", "10"],
+          pageSizeOptions: ["4", "5", "6", "7", "10"],
         }}
         onChange={handleTableChange}
       />
@@ -94,4 +97,4 @@ const Teachers = () => {
   );
 };
 
-export default Teachers;
+export default Branch;
