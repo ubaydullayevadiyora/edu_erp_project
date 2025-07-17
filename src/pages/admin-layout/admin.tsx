@@ -7,11 +7,11 @@ import {
   SettingOutlined,
   UserOutlined,
   PaperClipOutlined,
-  LogoutOutlined,
   UserSwitchOutlined,
   AppstoreOutlined,
+  DoubleRightOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Tooltip } from "antd";
+import { Button, Layout, Menu, theme } from "antd";
 
 const { Header, Sider, Content } = Layout;
 
@@ -106,16 +106,20 @@ const AdminLayout = () => {
           />
 
           {/* 👉 Log Out icon */}
-          <Tooltip title="Log out">
-            <LogoutOutlined
-              onClick={handleLogout}
-              style={{
-                fontSize: 15,
-                cursor: "pointer",
-                color: "#ff4d4f",
-              }}
-            />
-          </Tooltip>
+          <Button
+            type="text"
+            icon={<DoubleRightOutlined style={{ color: "red" }} />}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              color: "black",
+              fontWeight: "500",
+            }}
+            onClick={handleLogout}
+          >
+            Log out
+          </Button>
         </Header>
 
         <Content

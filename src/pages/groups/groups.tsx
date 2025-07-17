@@ -1,9 +1,9 @@
 import { Button, Table, Space, type TablePaginationConfig } from "antd";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useGeneral, useGroup } from "@hooks";
 import type { Group } from "@types";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import GroupModal from "./group-modal";
 import PopConfirm from "../../components/pop-confirm";
 import { GroupColumns } from "../../components/table-columns";
@@ -64,10 +64,14 @@ const Groups = () => {
           <Button type="primary" onClick={() => editItem(record)}>
             <EditOutlined />
           </Button>
-          <PopConfirm
-            handleDelete={() => deleteItem(record.id!)}
-            loading={isDeleting}
-          />
+
+          <PopConfirm handleDelete={() => deleteItem(record.id!)}loading={isDeleting}/>
+
+          <Link to={`/admin/group/${record.id}`}>
+            <Button type="primary" ghost >
+              <EyeOutlined />
+            </Button>
+          </Link>
         </Space>
       ),
     },

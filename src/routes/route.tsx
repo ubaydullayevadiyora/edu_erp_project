@@ -17,6 +17,7 @@ import {
   LayoutProtect,
   LoginProtect,
   BranchLayout,
+  SingleGroup,
 } from "@pages";
 
 const Router = () => {
@@ -33,7 +34,7 @@ const Router = () => {
         />
         <Route path="sign-up" element={<SignUp />} />
 
-        {/* admin layout */}
+        {/* admin layout and protected route */}
         <Route
           path="admin"
           element={
@@ -43,6 +44,7 @@ const Router = () => {
           }
         >
           <Route index element={<Navigate to="groups" replace />} />
+          <Route path="group/:id" element={<SingleGroup />} />
           <Route path="groups" element={<Groups />} />
           <Route path="courses" element={<Courses />} />
           <Route path="student" element={<StudentLayout />} />

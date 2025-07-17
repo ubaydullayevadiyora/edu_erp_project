@@ -6,5 +6,5 @@ export interface Student {
   phone: string;
   password: string;
   gender: string;
-  date_of_birth: string;
+  date_of_birth: string | null;
 }

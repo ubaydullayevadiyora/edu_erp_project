@@ -1,5 +1,4 @@
 import * as yup from "yup";
-
 // group
 export const groupFormSchema = yup.object().shape({
   name: yup.string().min(5).required("Name is required"),
@@ -70,7 +69,10 @@ export const studentFormSchema = yup.object().shape({
     .required("Gender is required")
     .oneOf(["male", "female"], "Gender must be either male or female"),
 
-  date_of_birth: yup.date().nullable().required("Date of birth is required"),
+  date_of_birth: yup
+    .mixed<any>()
+    .nullable()
+    .required("Iltimos, tug'ilgan sanani kiriting"),
 });
 
 // teacher

@@ -47,7 +47,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
         update.date_of_birth ? dayjs(update.date_of_birth) : null
       );
 
-      // password ni update qilish odatda shart emas
     } else {
       reset();
     }
@@ -57,7 +56,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
     const payload = {
       ...data,
       date_of_birth: data.date_of_birth
-        ? dayjs(data.date_of_birth).format("YYYY-MM-DD")
+        ? data.date_of_birth.toDate() 
         : null,
     };
 
@@ -163,7 +162,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
         <Form.Item
           label="Date of Birth"
           validateStatus={errors.date_of_birth ? "error" : ""}
-          help={errors.date_of_birth?.message}
+          help={errors.date_of_birth?.message as string}
         >
           <Controller
             name="date_of_birth"
@@ -173,7 +172,8 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
                 {...field}
                 format="YYYY-MM-DD"
                 style={{ width: "100%" }}
-                onChange={field.onChange}
+                value={field.value ? dayjs(field.value) : null}
+                onChange={(date) => field.onChange(date?.toDate())}
               />
             )}
           />
