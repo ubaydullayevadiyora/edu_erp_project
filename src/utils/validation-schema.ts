@@ -64,6 +64,14 @@ export const studentFormSchema = yup.object().shape({
     .required("Password is required")
     .min(6, "Password must be at least 6 characters"),
 
+  confirm_password: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords do not match")
+    .when("password", {
+      is: (val: string) => !!val,
+      then: (schema) => schema.required("Please confirm your password"),
+    }),
+
   gender: yup
     .string()
     .required("Gender is required")

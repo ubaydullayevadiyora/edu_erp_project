@@ -30,6 +30,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
       email: "",
       phone: "",
       password: "",
+      confirm_password: "",
       gender: "male",
       date_of_birth: undefined,
     },
@@ -53,11 +54,12 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
   }, [update, setValue, reset]);
 
   const onSubmit = (data: any) => {
-    const payload = {
-      ...data,
-      date_of_birth: data.date_of_birth
-        ? data.date_of_birth.toDate() 
-        : null,
+    console.log(data);
+    
+    const payload = { ...data,
+      date_of_birth: dayjs.isDayjs(data.date_of_birth)
+        ? data.date_of_birth.toDate()
+        : data.date_of_birth ?? null,
     };
 
     if (update?.id) {
@@ -138,6 +140,18 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             />
           </Form.Item>
         )}
+
+        <Form.Item
+          label="Confirm Password"
+          validateStatus={errors.confirm_password ? "error" : ""}
+          help={errors.confirm_password?.message}
+        >
+          <Controller
+            name="confirm_password"
+            control={control}
+            render={({ field }) => <Input.Password {...field} />}
+          />
+        </Form.Item>
 
         <Form.Item
           label="Gender"
