@@ -5,7 +5,7 @@ const GroupStudents = ({ students }: GroupStudentsType) => {
 
   return (
     <div>
-      {/* <h1>GroupStudents</h1> */}
+      <h1>GroupStudents</h1>
     </div>
   );
 };

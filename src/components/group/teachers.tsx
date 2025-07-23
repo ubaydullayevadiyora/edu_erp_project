@@ -1,4 +1,6 @@
-const GroupTeachers = ({ teachers }: any) => {
+import type { GroupTeachersType } from "@types";
+
+const GroupTeachers = ({ teachers }: GroupTeachersType) => {
   console.log(teachers);
 
   return (

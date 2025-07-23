@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { Lessons } from "./general";
 import type { Student } from "./student";
+import type { Teacher } from "./teacher";
 
 export interface Group {
   id: number;
@@ -18,4 +19,8 @@ export interface GroupLessonsType {
 
 export interface GroupStudentsType {
   students:Student[]
+}
+
+export interface GroupTeachersType {
+  teachers: Teacher[];
 }

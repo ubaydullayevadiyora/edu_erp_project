@@ -2,7 +2,7 @@ import axios from "axios";
 import { clearStorage, getItem } from "@helpers";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: import.meta.env.VITE_BASE_URL + "/api",
 });
 
 axiosInstance.interceptors.request.use((config) => {
