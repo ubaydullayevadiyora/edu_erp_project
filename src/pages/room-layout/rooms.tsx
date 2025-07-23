@@ -1,16 +1,16 @@
 import { Button, Table, Space, type TablePaginationConfig } from "antd";
-import { EditOutlined } from "@ant-design/icons";
-import { useGeneral, useTeacher } from "@hooks";
-import type { Teacher } from "@types";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { useGeneral, useRoom } from "@hooks";
+import type { Rooms } from "@types";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import TeacherModal from "./teacher-modal";
+import { Link, useLocation } from "react-router-dom";
+import RoomModal from "./rooms-modal";
 import PopConfirm from "../../components/pop-confirm";
-import { TeacherColumns } from "../../components/table-columns";
+import { RoomColumns } from "../../components/table-columns";
 
-const Teachers = () => {
+const Rooms = () => {
   const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState<Teacher | null>(null);
+  const [update, setUpdate] = useState<Rooms | null>(null);
   const [params, setParams] = useState({
     page: 1,
     limit: 6,
@@ -22,30 +22,33 @@ const Teachers = () => {
     const searchParams = new URLSearchParams(location.search);
     const page = searchParams.get("page");
     const limit = searchParams.get("limit");
+
     if (page && limit) {
-      setParams({
+      setParams(() => ({
         page: Number(page),
         limit: Number(limit),
-      });
+      }));
     }
   }, [location.search]);
 
-  const { data, useTeacherDelete } = useTeacher(params);
-  const { mutate: deleteFn, isPending: isDeleting } = useTeacherDelete();
+  const { data, useRoomDelete } = useRoom(params);
+  const { mutate: deleteFn, isPending: isDeleting } = useRoomDelete();
   const { handlePagination } = useGeneral();
 
-  const deleteItem = (id: number) => {
-    deleteFn(id);
+  const toggle = () => {
+    setOpen(!open);
+    if (update) {
+      setUpdate(null);
+    }
   };
 
-  const editItem = (record: Teacher & { id: number }) => {
+  const editItem = (record: Rooms) => {
     setUpdate(record);
     setOpen(true);
   };
 
-  const toggle = () => {
-    setOpen(!open);
-    if (update) setUpdate(null);
+  const deleteItem = (id: number) => {
+    deleteFn(id);
   };
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
@@ -53,19 +56,26 @@ const Teachers = () => {
   };
 
   const columns = [
-    ...(TeacherColumns ?? []),
+    ...(RoomColumns ?? []),
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: Teacher) => (
+      render: (_: any, record: Rooms) => (
         <Space size="middle">
           <Button type="primary" onClick={() => editItem(record)}>
             <EditOutlined />
           </Button>
+
           <PopConfirm
-            handleDelete={() => deleteItem(record.id)}
+            handleDelete={() => deleteItem(record.id!)}
             loading={isDeleting}
           />
+
+          <Link to={`/admin/room/${record.id}`}>
+            <Button type="primary" ghost>
+              <EyeOutlined />
+            </Button>
+          </Link>
         </Space>
       ),
     },
@@ -73,13 +83,14 @@ const Teachers = () => {
 
   return (
     <>
-      {open && <TeacherModal open={open} toggle={toggle} update={update} />}
+      {open && <RoomModal open={open} toggle={toggle} update={update} />}
       <Button type="primary" onClick={() => setOpen(true)}>
-        Add Teacher
+        Add Room
       </Button>
-      <Table<Teacher>
+
+      <Table<Rooms>
         columns={columns}
-        dataSource={data?.data?.teachers}
+        dataSource={data?.data?.rooms}
         rowKey={(row) => row.id!}
         pagination={{
           current: params.page,
@@ -94,4 +105,4 @@ const Teachers = () => {
   );
 };
 
-export default Teachers;
+export default Rooms;

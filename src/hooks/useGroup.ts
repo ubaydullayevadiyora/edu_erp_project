@@ -5,17 +5,32 @@ import { type Group, type ParamsType } from "@types";
 export const useGroup = (params: ParamsType, id?: number) => {
 
   const queryClient = useQueryClient();
+
   const { data } = useQuery({
     queryKey: ["groups", params],
     queryFn: async () => groupService.getGroups(params),
   });
   
   const groupStudentsQuery = useQuery({
-    queryKey: ["group-students", params],
-    queryFn: async () => groupService.getGroupStudents(params, id!),
-    enabled:!id
+    enabled: !!id,
+    queryKey: ["group-students"],
+    queryFn: async () => groupService.getGroupStudents(id!),
   });
   const students = groupStudentsQuery.data;
+
+  const groupLessonsQuery = useQuery({
+    enabled: !!id,
+    queryKey: ["group-lessons"],
+    queryFn: async () => groupService.getGroupLessons(id!),
+  });
+  const lessons = groupLessonsQuery.data;
+
+  const groupTeachersQuery = useQuery({
+    enabled: !!id,
+    queryKey: ["group-teachers"],
+    queryFn: async () => groupService.getGroupTeachers(id!),
+  });
+  const teachers = groupTeachersQuery.data;
 
   // Mutations
   const useGroupCreate = () => {
@@ -42,11 +57,11 @@ export const useGroup = (params: ParamsType, id?: number) => {
       },
     });
   };
-
-
   return {
     data,
     students,
+    lessons,
+    teachers,
     useGroupCreate,
     useGroupUpdate,
     useGroupDelete,

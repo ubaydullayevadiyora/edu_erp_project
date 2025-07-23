@@ -12,10 +12,11 @@ interface StudentProps extends ModalProps {
 }
 
 const StudentModal = ({ open, toggle, update }: StudentProps) => {
-  const params = { page: 1, limit: 10 };
+  const params = { page: 1, limit: 6 };
   const { useStudentCreate, useStudentUpdate } = useStudent(params);
   const { mutate: createFn, isPending: isCreating } = useStudentCreate();
   const { mutate: updateFn, isPending: isUpdating } = useStudentUpdate();
+
   const {
     control,
     handleSubmit,
@@ -24,6 +25,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
     reset,
   } = useForm({
     resolver: yupResolver(studentFormSchema),
+    context: { isCreate: !update?.id },
     defaultValues: {
       first_name: "",
       last_name: "",
@@ -36,6 +38,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
     },
   });
 
+
   useEffect(() => {
     if (update?.id) {
       setValue("first_name", update.first_name);
@@ -47,20 +50,27 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
         "date_of_birth",
         update.date_of_birth ? dayjs(update.date_of_birth) : null
       );
-
     } else {
       reset();
     }
   }, [update, setValue, reset]);
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    
-    const payload = { ...data,
+    const payload: any = {
+      ...data,
       date_of_birth: dayjs.isDayjs(data.date_of_birth)
         ? data.date_of_birth.toDate()
         : data.date_of_birth ?? null,
     };
+
+    // CREATE: parolni qo‘shamiz
+    if (!update?.id && data.password) {
+      payload.password_hash = data.password;
+    }
+
+    // DELETE: keraksiz fieldlar
+    delete payload.password;
+    delete payload.confirm_password; // BU MUHIM!
 
     if (update?.id) {
       updateFn({ ...payload, id: update.id });
@@ -69,6 +79,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
     }
   };
 
+  
   return (
     <Modal
       title="Student Modal"
@@ -141,17 +152,19 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           </Form.Item>
         )}
 
-        <Form.Item
-          label="Confirm Password"
-          validateStatus={errors.confirm_password ? "error" : ""}
-          help={errors.confirm_password?.message}
-        >
-          <Controller
-            name="confirm_password"
-            control={control}
-            render={({ field }) => <Input.Password {...field} />}
-          />
-        </Form.Item>
+        {!update?.id && (
+          <Form.Item
+            label="Confirm Password"
+            validateStatus={errors.confirm_password ? "error" : ""}
+            help={errors.confirm_password?.message}
+          >
+            <Controller
+              name="confirm_password"
+              control={control}
+              render={({ field }) => <Input.Password {...field} />}
+            />
+          </Form.Item>
+        )}
 
         <Form.Item
           label="Gender"
@@ -179,8 +192,8 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           help={errors.date_of_birth?.message as string}
         >
           <Controller
-            name="date_of_birth"
             control={control}
+            name="date_of_birth"
             render={({ field }) => (
               <DatePicker
                 {...field}

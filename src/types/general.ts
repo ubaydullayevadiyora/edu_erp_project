@@ -19,3 +19,11 @@ export interface PaginationConfig {
   pagination: TablePaginationConfig;
   setParams: (params: ParamsType) => void;
 }
+
+export interface Lessons {
+  id: number;
+  notes: string;
+  title: string;
+  status: string;
+  date: string;
+}

@@ -1,22 +1,32 @@
-import { Modal, Form, Input, Button, Select, DatePicker } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Button,
+  Select,
+  DatePicker,
+  TimePicker,
+} from "antd";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import type { ModalProps, Group } from "@types";
 import { groupFormSchema } from "@utils";
 import dayjs from "dayjs";
-import { useCourse, useGroup } from "@hooks";
+import { useCourse, useGroup, useRoom } from "@hooks";
 
 interface GroupProps extends ModalProps {
   update: Group | null;
 }
 
 const GroupModal = ({ open, toggle, update }: GroupProps) => {
-  const params = { page: 1, limit: 10 }; 
+  const params = { page: 1, limit: 6 };
+
   const { useGroupCreate, useGroupUpdate } = useGroup(params, update?.id);
   const { mutate: createFn, isPending: isCreating } = useGroupCreate();
   const { mutate: updateFn, isPending: isUpdating } = useGroupUpdate();
-  const { data } = useCourse({ page: 1, limit: 6 });
+  const { data: courseData } = useCourse({ page: 1, limit: 6 });
+  const { data: roomData } = useRoom({ page: 1, limit: 50 });
 
   const {
     control,
@@ -29,9 +39,10 @@ const GroupModal = ({ open, toggle, update }: GroupProps) => {
     defaultValues: {
       name: "",
       status: "",
-      course_id: undefined,
-      start_date: undefined,
-      end_date: undefined,
+      courseId: undefined,
+      start_date: "",
+      start_time: "",
+      roomId: undefined,
     },
   });
 
@@ -39,25 +50,35 @@ const GroupModal = ({ open, toggle, update }: GroupProps) => {
     if (update?.id) {
       setValue("name", update.name);
       setValue("status", update.status);
-      setValue("course_id", update.course_id);
+      setValue("courseId", update.courseId);
+
       if (update.start_date) {
         setValue("start_date", dayjs(update.start_date));
       }
-      if (update.end_date) {
-        setValue("end_date", dayjs(update.end_date));
+
+      if (update.start_time) {
+        setValue("start_time", dayjs(update.start_time).format("HH:mm"));
+      }
+
+      if (update.roomId) {
+        setValue("roomId", update.roomId);
       }
     } else {
-      reset(); 
+      reset();
     }
   }, [update, setValue, reset]);
 
   const onSubmit = (data: any) => {
+    const payload = {
+      ...data,
+      start_date: dayjs(data.start_date).format("YYYY-MM-DD"),
+      start_time: data.start_time,
+    };
+
     if (update?.id) {
-      updateFn({ ...data, id: update.id });
-      console.log("update group", { ...data, id: update.id });
+      updateFn({ ...payload, id: update.id });
     } else {
-      createFn(data);
-      console.log("create group", data);
+      createFn(payload);
     }
   };
 
@@ -110,23 +131,48 @@ const GroupModal = ({ open, toggle, update }: GroupProps) => {
         </Form.Item>
 
         <Form.Item
-          label="Courses"
-          validateStatus={errors.course_id ? "error" : ""}
-          help={errors.course_id?.message}
+          label="Course"
+          validateStatus={errors.courseId ? "error" : ""}
+          help={errors.courseId?.message}
         >
           <Controller
-            name="course_id"
+            name="courseId"
             control={control}
             render={({ field }) => (
               <Select
                 {...field}
                 showSearch
-                placeholder="Search course"
+                placeholder="Select course"
                 optionFilterProp="label"
-                options={data?.data?.courses.map((course: any) => ({
+                options={courseData?.data?.courses.map((course: any) => ({
                   value: course.id,
                   label: course.title,
                 }))}
+              />
+            )}
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Room"
+          validateStatus={errors.roomId ? "error" : ""}
+          help={errors.roomId?.message}
+        >
+          <Controller
+            name="roomId"
+            control={control}
+            render={({ field }) => (
+              <Select
+                {...field}
+                showSearch
+                placeholder="Select room"
+                optionFilterProp="label"
+                options={
+                  roomData?.data?.rooms.map((room: any) => ({
+                    value: room.id,
+                    label: room.name,
+                  })) || []
+                }
               />
             )}
           />
@@ -152,19 +198,21 @@ const GroupModal = ({ open, toggle, update }: GroupProps) => {
         </Form.Item>
 
         <Form.Item
-          label="End Date"
-          validateStatus={errors.end_date ? "error" : ""}
-          help={errors.end_date?.message}
+          label="Start Time"
+          validateStatus={errors.start_time ? "error" : ""}
+          help={errors.start_time?.message}
         >
           <Controller
-            name="end_date"
+            name="start_time"
             control={control}
             render={({ field }) => (
-              <DatePicker
-                {...field}
+              <TimePicker
+                format="HH:mm"
                 style={{ width: "100%" }}
-                format="YYYY-MM-DD"
-                onChange={(date) => field.onChange(date)}
+                value={field.value ? dayjs(field.value, "HH:mm") : null}
+                onChange={(time) =>
+                  field.onChange(time ? time.format("HH:mm") : "")
+                }
               />
             )}
           />

@@ -49,6 +49,7 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
     } else {
       reset();
     }
+    
   }, [update, setValue, reset]);
 
   const onSubmit = (data: any) => {

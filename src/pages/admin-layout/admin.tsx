@@ -10,6 +10,7 @@ import {
   UserSwitchOutlined,
   AppstoreOutlined,
   DoubleRightOutlined,
+  InsertRowLeftOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 
@@ -60,6 +61,12 @@ const AdminLayout = () => {
       icon: <AppstoreOutlined />,
       label: "Branches",
       onClick: () => navigate("/admin/branches"),
+    },
+    {
+      key: "rooms",
+      icon: <InsertRowLeftOutlined />,
+      label: "Rooms",
+      onClick: () => navigate("/admin/rooms"),
     },
     {
       key: "settings",

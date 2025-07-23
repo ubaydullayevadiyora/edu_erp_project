@@ -18,6 +18,7 @@ import {
   LoginProtect,
   BranchLayout,
   SingleGroup,
+  Room,
 } from "@pages";
 
 const Router = () => {
@@ -50,6 +51,7 @@ const Router = () => {
           <Route path="student" element={<StudentLayout />} />
           <Route path="teacher" element={<TeacherLayout />} />
           <Route path="branches" element={<BranchLayout />} />
+          <Route path="rooms" element={<Room />} />
         </Route>
 
         {/* teacher layout */}

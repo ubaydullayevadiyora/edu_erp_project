@@ -8,8 +8,18 @@ export const groupService = {
     return res;
   },
 
-  async getGroupStudents(params: ParamsType, id: number) {
-    const res = await apiConfig().getRequest(`${ApiUrls.GROUPS}/${id}`, params);
+  async getGroupStudents(id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.GROUP_STUDENTS_BY_GROUP_ID}/${id}`);
+    return res;
+  },
+
+  async getGroupLessons(id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.GROUP_LESSONS}/${id}`);
+    return res;
+  },
+
+  async getGroupTeachers(id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.GROUP_TEACHERS_BY_GROUP_ID}/${id}`);
     return res;
   },
 

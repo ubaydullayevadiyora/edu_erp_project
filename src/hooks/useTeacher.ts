@@ -3,18 +3,11 @@ import { teacherService } from "@service";
 import { type Teacher, type ParamsType } from "@types";
 
 export const useTeacher = (params: ParamsType) => {
-
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["teachers", params],
     queryFn: async () => teacherService.getTeachers(params),
   });
-  
-//   const teacherStudentsQuery = useQuery({
-//     queryKey: ["teacher-students", params],
-//     queryFn: async () => teacherService.getTeacherStudents(params, id!),
-//   });
-//   const students = teacherStudentsQuery.data;
 
   // Mutations
   const useTeacherCreate = () => {
@@ -27,7 +20,8 @@ export const useTeacher = (params: ParamsType) => {
   };
   const useTeacherUpdate = () => {
     return useMutation({
-      mutationFn: async ({id, ...rest}:Teacher) => teacherService.updateTeacher(id, rest),
+      mutationFn: async ({ id, ...rest }: Teacher) =>
+        teacherService.updateTeacher(id, rest),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["teachers"] });
       },
@@ -41,7 +35,6 @@ export const useTeacher = (params: ParamsType) => {
       },
     });
   };
-
 
   return {
     data,

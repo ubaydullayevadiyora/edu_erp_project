@@ -15,7 +15,7 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
   const { useCourseCreate, useCourseUpdate } = useCourse(params); //update?.id
   const { mutate: createFn, isPending: isCreating } = useCourseCreate();
   const { mutate: updateFn, isPending: isUpdating } = useCourseUpdate();
-  
+
   const {
     control,
     handleSubmit,
@@ -28,9 +28,10 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
       title: "",
       description: "",
       price: 0,
-      duration: "",
+      duration: 3,
       lessons_in_a_week: 1,
-      lesson_duration: "",
+      lessons_in_a_month: 12,
+      lesson_duration: 120,
     },
   });
 
@@ -65,6 +66,7 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
       footer={null}
     >
       <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+        {/* TITLE */}
         <Form.Item
           label="Title"
           validateStatus={errors.title ? "error" : ""}
@@ -78,7 +80,7 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             )}
           />
         </Form.Item>
-
+        {/* DESCRIPTION */}
         <Form.Item
           label="Description"
           validateStatus={errors.description ? "error" : ""}
@@ -96,7 +98,7 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             )}
           />
         </Form.Item>
-
+        {/* PRICE */}
         <Form.Item
           label="Price"
           validateStatus={errors.price ? "error" : ""}
@@ -115,7 +117,7 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             )}
           />
         </Form.Item>
-
+        {/* DURATION */}
         <Form.Item
           label="Duration (e.g. '3 oy')"
           validateStatus={errors.duration ? "error" : ""}
@@ -125,13 +127,13 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             name="duration"
             control={control}
             render={({ field }) => (
-              <Input {...field} placeholder="Davomiylik (masalan: 3 oy)" />
+              <Input {...field} placeholder="Duration (e.g. '3 oy')" />
             )}
           />
         </Form.Item>
-
+        {/* LESSONs IN A WEEK */}
         <Form.Item
-          label="Lessons per week"
+          label="Lessons in a week"
           validateStatus={errors.lessons_in_a_week ? "error" : ""}
           help={errors.lessons_in_a_week?.message}
         >
@@ -144,14 +146,34 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
                 min={1}
                 max={7}
                 style={{ width: "100%" }}
-                placeholder="Haftasiga necha dars?"
+                placeholder="Lessons in a week"
               />
             )}
           />
         </Form.Item>
-
+        {/* LESSONs IN A MONTH */}
         <Form.Item
-          label="Lesson duration (e.g. '2 soat')"
+          label="Lessons in a month"
+          validateStatus={errors.lessons_in_a_month ? "error" : ""}
+          help={errors.lessons_in_a_month?.message}
+        >
+          <Controller
+            name="lessons_in_a_month"
+            control={control}
+            render={({ field }) => (
+              <InputNumber
+                {...field}
+                min={1}
+                max={7}
+                style={{ width: "100%" }}
+                placeholder="Lessons in a month"
+              />
+            )}
+          />
+        </Form.Item>
+        {/* LESSON DURATION */}
+        <Form.Item
+          label="Lesson duration (e.g. '3 HOUR')"
           validateStatus={errors.lesson_duration ? "error" : ""}
           help={errors.lesson_duration?.message}
         >
@@ -159,14 +181,11 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             name="lesson_duration"
             control={control}
             render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Dars davomiyligi (masalan: 2 soat)"
-              />
+              <Input {...field} placeholder="Lesson duration (e.g. '3 HOUR')" />
             )}
           />
         </Form.Item>
-
+        {/* BUTTON */}
         <Form.Item>
           <Button
             type="primary"
