@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import type { Lessons } from "./general";
 import type { Student } from "./student";
-import type { JSX } from "react/jsx-runtime";
 
 export interface Group {
   id: number;
@@ -14,7 +13,6 @@ export interface Group {
 }
 
 export interface GroupLessonsType {
-  map(arg0: (lesson: Lessons) => JSX.Element): import("react").ReactNode;
   lessons: Lessons[];
 }
 

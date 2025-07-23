@@ -34,10 +34,9 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
       password: "",
       confirm_password: "",
       gender: "male",
-      date_of_birth: undefined,
+      date_of_birth:undefined,
     },
   });
-
 
   useEffect(() => {
     if (update?.id) {
@@ -46,10 +45,9 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
       setValue("email", update.email);
       setValue("phone", update.phone);
       setValue("gender", update.gender);
-      setValue(
-        "date_of_birth",
-        update.date_of_birth ? dayjs(update.date_of_birth) : null
-      );
+      if (update.date_of_birth) {
+        setValue("date_of_birth", dayjs(update.date_of_birth).toDate())
+      }
     } else {
       reset();
     }
@@ -58,19 +56,17 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
   const onSubmit = (data: any) => {
     const payload: any = {
       ...data,
-      date_of_birth: dayjs.isDayjs(data.date_of_birth)
-        ? data.date_of_birth.toDate()
-        : data.date_of_birth ?? null,
+      date_of_birth: dayjs(data.date_of_birth).format("YYYY-MM-DD")
     };
 
-    // CREATE: parolni qo‘shamiz
+    // CREATE
     if (!update?.id && data.password) {
       payload.password_hash = data.password;
     }
 
-    // DELETE: keraksiz fieldlar
+    // DELETE
     delete payload.password;
-    delete payload.confirm_password; // BU MUHIM!
+    delete payload.confirm_password; 
 
     if (update?.id) {
       updateFn({ ...payload, id: update.id });
@@ -199,8 +195,8 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
                 {...field}
                 format="YYYY-MM-DD"
                 style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value) : null}
-                onChange={(date) => field.onChange(date?.toDate())}
+                
+                onChange={(date) => field.onChange(date)}
               />
             )}
           />

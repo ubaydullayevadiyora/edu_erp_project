@@ -1,3 +1,5 @@
+import type dayjs from "dayjs";
+
 export interface Student {
   id: number;
   first_name: string;
@@ -6,5 +8,5 @@ export interface Student {
   phone: string;
   password: string;
   gender: "male" | "female";
-  date_of_birth: string | null;
+  date_of_birth: dayjs.Dayjs | null;
 }

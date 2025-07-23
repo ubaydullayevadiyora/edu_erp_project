@@ -22,7 +22,7 @@ export const useCourse = (params: ParamsType, ) => {
   const useCourseUpdate = () => {
     return useMutation({
       mutationFn: async ({ id, ...rest }: Course) =>
-        courseService.updateCourse(id, rest),
+        courseService.updateCourse(id!, rest),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["courses"] });
       },
