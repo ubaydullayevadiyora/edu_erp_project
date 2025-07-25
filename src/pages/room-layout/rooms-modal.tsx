@@ -67,26 +67,38 @@ const RoomModal = ({ open, toggle, update }: RoomModalProps) => {
         onFinish={handleSubmit(onSubmit)}
       >
         <Form.Item
-          label="Branches"
+          label="Branch"
           validateStatus={errors.branchId ? "error" : ""}
           help={errors.branchId?.message}
         >
           <Controller
             name="branchId"
             control={control}
-            render={({ field }) => (
-              <Select
-                {...field}
-                mode="multiple"
-                showSearch
-                placeholder="Search branch"
-                optionFilterProp="label"
-                options={(data?.data?.branch ?? []).map((branch: any) => ({
-                  value: branch.id,
-                  label: branch.name,
-                }))}
-              />
-            )}
+            render={({ field }) => {
+              // Unikal branchlar
+              const branches = Array.from(
+                new Map(
+                  (data?.data?.rooms ?? []).map((room: any) => [
+                    room.branch.id,
+                    room.branch,
+                  ])
+                ).values()
+              );
+
+              return (
+                <Select
+                  {...field}
+                  mode="multiple"
+                  showSearch
+                  placeholder="Search branch"
+                  optionFilterProp="label"
+                  options={branches.map((branch: any) => ({
+                    value: branch.id,
+                    label: branch.name,
+                  }))}
+                />
+              );
+            }}
           />
         </Form.Item>
 

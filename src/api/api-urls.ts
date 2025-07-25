@@ -25,7 +25,7 @@ export class ApiUrls {
   public static GROUP_LESSONS: string = this.LESSONS + "/group"
 
   // GROUP TEACHERS
-  public static GROUP_TEACHERS: string = "/group-teacher"
+  public static GROUP_TEACHERS: string = "/group-teachers"
   public static GROUP_TEACHERS_BY_GROUP_ID: string = this.GROUP_TEACHERS + "/by-group"
 
   // GROUP STUDENTS 

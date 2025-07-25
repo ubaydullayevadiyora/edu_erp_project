@@ -21,12 +21,13 @@ interface GroupProps extends ModalProps {
 
 const GroupModal = ({ open, toggle, update }: GroupProps) => {
   const params = { page: 1, limit: 6 };
-
+  console.log(update);
+  
   const { useGroupCreate, useGroupUpdate } = useGroup(params, update?.id);
   const { mutate: createFn, isPending: isCreating } = useGroupCreate();
   const { mutate: updateFn, isPending: isUpdating } = useGroupUpdate();
   const { data: courseData } = useCourse({ page: 1, limit: 6 });
-  const { data: roomData } = useRoom({ page: 1, limit: 50 });
+  const { data: roomData } = useRoom({ page: 1, limit: 6 });
 
   const {
     control,
@@ -47,10 +48,14 @@ const GroupModal = ({ open, toggle, update }: GroupProps) => {
   });
 
   useEffect(() => {
-    if (update?.id) {
+    const coursesLoaded = courseData?.data?.courses?.length;
+    const roomsLoaded = roomData?.data?.rooms?.length;
+
+    if (update?.id && coursesLoaded && roomsLoaded) {
       setValue("name", update.name);
       setValue("status", update.status);
-      setValue("courseId", update.courseId);
+      setValue("courseId", update?.course?.id);
+      setValue("roomId", update.room?.id);
 
       if (update.start_date) {
         setValue("start_date", dayjs(update.start_date));
@@ -59,14 +64,11 @@ const GroupModal = ({ open, toggle, update }: GroupProps) => {
       if (update.start_time) {
         setValue("start_time", dayjs(update.start_time).format("HH:mm"));
       }
-
-      if (update.roomId) {
-        setValue("roomId", update.roomId);
-      }
-    } else {
+    } else if (!update?.id) {
       reset();
     }
-  }, [update, setValue, reset]);
+  }, [update, courseData, roomData, setValue, reset]);
+
 
   const onSubmit = (data: any) => {
     const payload = {

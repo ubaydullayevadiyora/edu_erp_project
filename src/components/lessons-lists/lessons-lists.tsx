@@ -1,9 +1,11 @@
 import { Tooltip, Button } from "antd";
 import { useRef, useState } from "react";
 import dayjs from "dayjs";
-import type {Lessons } from "@types";
+import type { Lessons } from "@types";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const LessonsLists = ({ lessons }: { lessons: Lessons[] }) => {
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
 
@@ -30,9 +32,14 @@ const LessonsLists = ({ lessons }: { lessons: Lessons[] }) => {
 
   return (
     <div className="flex gap-2 items-center">
-      <Button type="primary" onClick={goPrev} disabled={isStartDisabled()}>
-        prev
-      </Button>
+      <Button
+        shape="circle"
+        icon={<LeftOutlined />}
+        type="primary"
+        onClick={goPrev}
+        disabled={isStartDisabled()}
+      ></Button>
+
       <div
         className="overflow-scroll flex gap-1 [&::-webkit-scrollbar]:hidden"
         ref={containerRef}
@@ -52,15 +59,32 @@ const LessonsLists = ({ lessons }: { lessons: Lessons[] }) => {
               </div>
             }
           >
-            <div className="p-3 bg-[#ccc] rounded-lg cursor-pointer">
-              <span>{dayjs(lesson.date).format("DD-MM")}</span>
+            <div
+              style={{ width: "200px", height: "70px" }}
+              className={`
+ w-150 h-16  flex flex-col items-center justify-center
+  rounded-lg cursor-pointer text-sm
+  bg-blue-200 hover:bg-gray-300 transition
+`}
+            >
+              <span className="text-lg font-semibold">
+                {dayjs(lesson.date).format("DD")}
+              </span>
+              <span className="text-xs text-gray-600 uppercase tracking-wide">
+                {dayjs(lesson.date).format("MMM")}
+              </span>
             </div>
           </Tooltip>
         ))}
       </div>
-      <Button type="primary" onClick={goNext} disabled={isEndDisabled()}>
-        next
-      </Button>
+
+      <Button
+        shape="circle"
+        type="primary"
+        onClick={goNext}
+        disabled={isEndDisabled()}
+        icon={<RightOutlined />}
+      ></Button>
     </div>
   );
 };

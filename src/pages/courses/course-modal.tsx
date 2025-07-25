@@ -12,7 +12,7 @@ interface CourseProps extends ModalProps {
 
 const CourseModal = ({ open, toggle, update }: CourseProps) => {
   const params = { page: 1, limit: 6 };
-  const { useCourseCreate, useCourseUpdate } = useCourse(params); //update?.id
+  const { useCourseCreate, useCourseUpdate } = useCourse(params); 
   const { mutate: createFn, isPending: isCreating } = useCourseCreate();
   const { mutate: updateFn, isPending: isUpdating } = useCourseUpdate();
 
@@ -77,24 +77,6 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             control={control}
             render={({ field }) => (
               <Input {...field} placeholder="Course title" />
-            )}
-          />
-        </Form.Item>
-        {/* DESCRIPTION */}
-        <Form.Item
-          label="Description"
-          validateStatus={errors.description ? "error" : ""}
-          help={errors.description?.message}
-        >
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <Input.TextArea
-                {...field}
-                rows={4}
-                placeholder="Course description"
-              />
             )}
           />
         </Form.Item>
@@ -182,6 +164,24 @@ const CourseModal = ({ open, toggle, update }: CourseProps) => {
             control={control}
             render={({ field }) => (
               <Input {...field} placeholder="Lesson duration (e.g. '3 HOUR')" />
+            )}
+          />
+        </Form.Item>
+        {/* DESCRIPTION */}
+        <Form.Item
+          label="Description"
+          validateStatus={errors.description ? "error" : ""}
+          help={errors.description?.message}
+        >
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <Input.TextArea
+                {...field}
+                rows={4}
+                placeholder="Course description"
+              />
             )}
           />
         </Form.Item>

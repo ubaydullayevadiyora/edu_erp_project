@@ -94,7 +94,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           <Controller
             name="first_name"
             control={control}
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} placeholder="Firstname" />}
           />
         </Form.Item>
 
@@ -106,7 +106,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           <Controller
             name="last_name"
             control={control}
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} placeholder="Lastname" />}
           />
         </Form.Item>
 
@@ -118,7 +118,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           <Controller
             name="email"
             control={control}
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} placeholder="Email" />}
           />
         </Form.Item>
 
@@ -130,7 +130,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           <Controller
             name="phone"
             control={control}
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} placeholder="Phone" />}
           />
         </Form.Item>
 
@@ -143,7 +143,9 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             <Controller
               name="password"
               control={control}
-              render={({ field }) => <Input.Password {...field} />}
+              render={({ field }) => (
+                <Input.Password {...field} placeholder="Password" />
+              )}
             />
           </Form.Item>
         )}
@@ -157,7 +159,9 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             <Controller
               name="confirm_password"
               control={control}
-              render={({ field }) => <Input.Password {...field} />}
+              render={({ field }) => (
+                <Input.Password {...field} placeholder="Confirm Password" />
+              )}
             />
           </Form.Item>
         )}
@@ -177,6 +181,7 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
                   { value: "male", label: "Male" },
                   { value: "female", label: "Female" },
                 ]}
+                placeholder="Gender"
               />
             )}
           />
@@ -193,10 +198,11 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             render={({ field }) => (
               <DatePicker
                 {...field}
+                value={field.value ? dayjs(field.value) : null} //added
                 format="YYYY-MM-DD"
                 style={{ width: "100%" }}
-                
                 onChange={(date) => field.onChange(date)}
+                placeholder="Date of Birth"
               />
             )}
           />

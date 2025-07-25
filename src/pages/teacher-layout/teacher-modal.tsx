@@ -25,7 +25,7 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
     reset,
   } = useForm({
     resolver: yupResolver(teacherFormSchema),
-    context: { isUpdate: !!update },
+    context: { isUpdate: !update?.id },
     defaultValues: {
       first_name: "",
       last_name: "",
@@ -44,23 +44,22 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
       setValue("email", update.email);
       setValue("phone", update.phone);
       setValue("role", update.role);
-      const branchIds = update.branches?.map((branch:any) => branch.id) || [];
+      const branchIds = update.branches?.map((branch: any) => branch.id) || [];
       setValue("branchId", branchIds);
     } else {
       reset();
     }
-    
   }, [update, setValue, reset]);
 
   const onSubmit = (data: any) => {
-    console.log("teacher data", data);
-    
+    const payload: any = {
+      ...data,
+    };
+
     if (update?.id) {
-      updateFn({ ...data, id: update.id });
-      console.log("Update teacher", { ...data, id: update.id });
+      updateFn({ ...payload, id: update.id });
     } else {
-      createFn(data);
-      console.log("Create teacher", data);
+      createFn(payload);
     }
   };
 

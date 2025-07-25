@@ -10,7 +10,12 @@ export interface Group {
   status: string;
   start_date: dayjs.Dayjs | null;
   start_time: dayjs.Dayjs | null;
-  roomId: number;
+  room: {
+    id: number;
+  };
+  course: {
+    id: number;
+  };
 }
 
 export interface GroupLessonsType {
@@ -18,7 +23,7 @@ export interface GroupLessonsType {
 }
 
 export interface GroupStudentsType {
-  students:Student[]
+  students: Student[];
 }
 
 export interface GroupTeachersType {

@@ -80,15 +80,17 @@ const AdminLayout = () => {
 
   return (
     <Layout style={{ minHeight: "100vh", margin: 0 }}>
+      
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         width={200}
-        style={{ background: "#001529" }}
+        style={{ background: "white" }}
       >
+
         <Menu
-          theme="dark"
+          theme="light"
           mode="inline"
           selectedKeys={[selectedKey]}
           items={menuItems}

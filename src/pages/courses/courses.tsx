@@ -1,4 +1,4 @@
-import { Button, Table, Space, type TablePaginationConfig } from "antd";
+import { Button, Table, Space, type TablePaginationConfig, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useGeneral, useCourse } from "@hooks";
 import type { Course } from "@types";
@@ -61,7 +61,11 @@ const Courses = () => {
       key: "action",
       render: (_: any, record: Course) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
+          <Button
+            type="primary"
+            onClick={() => editItem(record)}
+            style={{ width: 35, height: 35 }}
+          >
             <EditOutlined />
           </Button>
           <PopConfirm
@@ -76,9 +80,28 @@ const Courses = () => {
   return (
     <>
       {open && <CourseModal open={open} toggle={toggle} update={update} />}
-      <Button type="primary" onClick={() => setOpen(true)}>
-        Add Course
-      </Button>
+      <div className="w-full">
+        <h1 className="text-xl font-bold mb-2">COURSES</h1>
+
+        {/* Tugmani chapga suradigan konteyner */}
+        <div className="flex justify-between mb-4 p-1">
+          <Input.Search
+            placeholder="Search courses..."
+            allowClear
+            enterButton
+            className="max-w-xs"
+            onSearch={(value) => console.log("Search:", value)}
+          />
+
+          <Button
+            type="primary"
+            onClick={() => setOpen(true)}
+            className="!bg-blue-600 !text-white"
+          >
+            + add courses
+          </Button>
+        </div>
+      </div>
       <Table<Course>
         columns={columns}
         dataSource={data?.data?.courses}

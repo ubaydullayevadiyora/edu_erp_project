@@ -1,4 +1,4 @@
-import { Button, Table, Space, type TablePaginationConfig } from "antd";
+import { Button, Table, Space, type TablePaginationConfig, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useGeneral, useTeacher } from "@hooks";
 import type { Teacher } from "@types";
@@ -59,7 +59,11 @@ const Teachers = () => {
       key: "action",
       render: (_: any, record: Teacher) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
+          <Button
+            type="primary"
+            onClick={() => editItem(record)}
+            style={{ width: 35, height: 35 }}
+          >
             <EditOutlined />
           </Button>
           <PopConfirm
@@ -74,9 +78,28 @@ const Teachers = () => {
   return (
     <>
       {open && <TeacherModal open={open} toggle={toggle} update={update} />}
-      <Button type="primary" onClick={() => setOpen(true)}>
-        Add Teacher
-      </Button>
+      <div className="w-full">
+        <h1 className="text-xl font-bold mb-2">TEACHERS</h1>
+
+        {/* Tugmani chapga suradigan konteyner */}
+        <div className="flex justify-between mb-4 p-1">
+          <Input.Search
+            placeholder="Search teachers..."
+            allowClear
+            enterButton
+            className="max-w-xs"
+            onSearch={(value) => console.log("Search:", value)}
+          />
+
+          <Button
+            type="primary"
+            onClick={() => setOpen(true)}
+            className="!bg-blue-600 !text-white"
+          >
+            + add teachers
+          </Button>
+        </div>
+      </div>
       <Table<Teacher>
         columns={columns}
         dataSource={data?.data?.teachers}

@@ -1,4 +1,4 @@
-import { Button, Table, Space, type TablePaginationConfig } from "antd";
+import { Button, Table, Space, type TablePaginationConfig, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { useGeneral, useBranch } from "@hooks";
 import type { Branch } from "@types";
@@ -61,7 +61,11 @@ const Branch = () => {
       key: "action",
       render: (_: any, record: Branch) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
+          <Button
+            type="primary"
+            onClick={() => editItem(record)}
+            style={{ width: 35, height: 35 }}
+          >
             <EditOutlined />
           </Button>
           <PopConfirm
@@ -77,9 +81,28 @@ const Branch = () => {
     <>
       {open && <BranchModal open={open} toggle={toggle} update={update} />}
       {/* <h1>GROUPS</h1> */}
-      <Button type="primary" onClick={() => setOpen(true)}>
-        add branch
-      </Button>
+      <div className="w-full">
+        <h1 className="text-xl font-bold mb-2">BRANCHES</h1>
+
+        {/* Tugmani chapga suradigan konteyner */}
+        <div className="flex justify-between mb-4 p-1">
+          <Input.Search
+            placeholder="Search branches..."
+            allowClear
+            enterButton
+            className="max-w-xs"
+            onSearch={(value) => console.log("Search:", value)}
+          />
+
+          <Button
+            type="primary"
+            onClick={() => setOpen(true)}
+            className="!bg-blue-600 !text-white"
+          >
+            + add branches
+          </Button>
+        </div>
+      </div>
       <Table<Branch>
         columns={columns}
         dataSource={data?.data?.branch}

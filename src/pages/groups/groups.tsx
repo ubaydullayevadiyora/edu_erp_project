@@ -1,4 +1,4 @@
-import { Button, Table, Space, type TablePaginationConfig } from "antd";
+import { Button, Table, Space, type TablePaginationConfig, Input } from "antd";
 import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { useGeneral, useGroup } from "@hooks";
 import type { Group } from "@types";
@@ -61,14 +61,21 @@ const Groups = () => {
       key: "action",
       render: (_: any, record: Group) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
+          <Button
+            type="primary"
+            onClick={() => editItem(record)}
+            style={{ width: 35, height: 35 }}
+          >
             <EditOutlined />
           </Button>
 
-          <PopConfirm handleDelete={() => deleteItem(record.id!)}loading={isDeleting}/>
+          <PopConfirm
+            handleDelete={() => deleteItem(record.id!)}
+            loading={isDeleting}
+          />
 
           <Link to={`/admin/group/${record.id}`}>
-            <Button type="primary" ghost >
+            <Button type="primary" style={{ width: 35, height: 35 }} ghost>
               <EyeOutlined />
             </Button>
           </Link>
@@ -80,10 +87,29 @@ const Groups = () => {
   return (
     <>
       {open && <GroupModal open={open} toggle={toggle} update={update} />}
-      {/* <h1>GROUPS</h1> */}
-      <Button type="primary" onClick={() => setOpen(true)}>
-        add group
-      </Button>
+      <div className="w-full">
+        <h1 className="text-xl font-bold mb-2">GROUPS</h1>
+
+        {/* Tugmani chapga suradigan konteyner */}
+        <div className="flex justify-between mb-4 p-1">
+          <Input.Search
+            placeholder="Search groups..."
+            allowClear
+            enterButton
+            className="max-w-xs"
+            onSearch={(value) => console.log("Search:", value)}
+          />
+
+          <Button
+            type="primary"
+            onClick={() => setOpen(true)}
+            className="!bg-blue-600 !text-white"
+          >
+            + add group
+          </Button>
+        </div>
+      </div>
+
       <Table<Group>
         columns={columns}
         dataSource={data?.data?.data}

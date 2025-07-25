@@ -1,9 +1,9 @@
-import { Button, Table, Space, type TablePaginationConfig } from "antd";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { Button, Table, Space, type TablePaginationConfig, Input } from "antd";
+import { EditOutlined } from "@ant-design/icons";
 import { useGeneral, useRoom } from "@hooks";
 import type { Rooms } from "@types";
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import RoomModal from "./rooms-modal";
 import PopConfirm from "../../components/pop-confirm";
 import { RoomColumns } from "../../components/table-columns";
@@ -62,7 +62,11 @@ const Rooms = () => {
       key: "action",
       render: (_: any, record: Rooms) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
+          <Button
+            type="primary"
+            onClick={() => editItem(record)}
+            style={{ width: 35, height: 35 }}
+          >
             <EditOutlined />
           </Button>
 
@@ -71,11 +75,11 @@ const Rooms = () => {
             loading={isDeleting}
           />
 
-          <Link to={`/admin/room/${record.id}`}>
+          {/* <Link to={`/admin/room/${record.id}`}>
             <Button type="primary" ghost>
               <EyeOutlined />
             </Button>
-          </Link>
+          </Link> */}
         </Space>
       ),
     },
@@ -84,9 +88,28 @@ const Rooms = () => {
   return (
     <>
       {open && <RoomModal open={open} toggle={toggle} update={update} />}
-      <Button type="primary" onClick={() => setOpen(true)}>
-        Add Room
-      </Button>
+      <div className="w-full">
+        <h1 className="text-xl font-bold mb-2">ROOMS</h1>
+
+        {/* Tugmani chapga suradigan konteyner */}
+        <div className="flex justify-between mb-4 p-1">
+          <Input.Search
+            placeholder="Search rooms..."
+            allowClear
+            enterButton
+            className="max-w-xs"
+            onSearch={(value) => console.log("Search:", value)}
+          />
+
+          <Button
+            type="primary"
+            onClick={() => setOpen(true)}
+            className="!bg-blue-600 !text-white"
+          >
+            + add room
+          </Button>
+        </div>
+      </div>
 
       <Table<Rooms>
         columns={columns}
