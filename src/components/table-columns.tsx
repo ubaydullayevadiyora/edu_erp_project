@@ -182,3 +182,15 @@ export const RoomColumns: TableProps<Rooms>["columns"] = [
   },
 ];
 
+export const minimalStudentColumns = [
+  {
+    title: "Firstname",
+    dataIndex: "first_name",
+    key: "first_name",
+  },
+  {
+    title: "Lastname",
+    dataIndex: "last_name",
+    key: "last_name",
+  },
+];

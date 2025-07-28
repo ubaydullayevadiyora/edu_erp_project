@@ -4,6 +4,7 @@ import { type Student, type ParamsType } from "@types";
 
 export const useStudent = (params: ParamsType) => {
   const queryClient = useQueryClient();
+  
   const { data } = useQuery({
     queryKey: ["students", params],
     queryFn: async () => studentService.getStudents(params),

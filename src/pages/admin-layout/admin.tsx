@@ -9,10 +9,11 @@ import {
   PaperClipOutlined,
   UserSwitchOutlined,
   AppstoreOutlined,
-  DoubleRightOutlined,
+  // DoubleRightOutlined,
   InsertRowLeftOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
+import { UserDropdown } from "../../components";
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,12 +25,6 @@ const AdminLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    navigate("/");
-  };
 
   const menuItems = [
     {
@@ -80,7 +75,6 @@ const AdminLayout = () => {
 
   return (
     <Layout style={{ minHeight: "100vh", margin: 0 }}>
-      
       <Sider
         trigger={null}
         collapsible
@@ -88,6 +82,21 @@ const AdminLayout = () => {
         width={200}
         style={{ background: "white" }}
       >
+        {/* ✅ Logo yoki brend nomi */}
+        <div
+          style={{
+            height: 64,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 22,
+            fontWeight: 700,
+            color: "#1677ff",
+            borderBottom: "1px solid #f0f0f0",
+          }}
+        >
+          {!collapsed ? "Edu ERP" : "E"}
+        </div>
 
         <Menu
           theme="light"
@@ -114,21 +123,8 @@ const AdminLayout = () => {
             style={{ fontSize: 18 }}
           />
 
-          {/* 👉 Log Out icon */}
-          <Button
-            type="text"
-            icon={<DoubleRightOutlined style={{ color: "red" }} />}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "4px",
-              color: "black",
-              fontWeight: "500",
-            }}
-            onClick={handleLogout}
-          >
-            Log out
-          </Button>
+          {/* ✅ UserDropdown o‘rnatildi */}
+          <UserDropdown />
         </Header>
 
         <Content
