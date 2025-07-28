@@ -1,3 +1,35 @@
 @import "tailwindcss";
 
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 
+/* Ant Design table custom style */
+.custom-ant-table .ant-table {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.custom-ant-table .ant-table-thead > tr > th {
+  background-color: #f4f7fe;
+  color: #2f2f2f;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.custom-ant-table .ant-table-tbody > tr > td {
+  font-size: 14px;
+  color: #444;
+  padding: 12px 16px;
+}
+
+/* index.css yoki App.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

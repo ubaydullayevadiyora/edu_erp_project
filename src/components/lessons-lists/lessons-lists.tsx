@@ -5,7 +5,6 @@ import type { Lessons } from "@types";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const LessonsLists = ({ lessons }: { lessons: Lessons[] }) => {
-
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
 
@@ -16,11 +15,11 @@ const LessonsLists = ({ lessons }: { lessons: Lessons[] }) => {
   };
 
   const goNext = () => {
-    containerRef.current?.scrollBy({ left: 50, behavior: "smooth" });
+    containerRef.current?.scrollBy({ left: 120, behavior: "smooth" });
   };
 
   const goPrev = () => {
-    containerRef.current?.scrollBy({ left: -50, behavior: "smooth" });
+    containerRef.current?.scrollBy({ left: -120, behavior: "smooth" });
   };
 
   const isStartDisabled = () => !containerRef.current || scrollPosition <= 5;
@@ -31,60 +30,69 @@ const LessonsLists = ({ lessons }: { lessons: Lessons[] }) => {
   };
 
   return (
-    <div className="flex gap-2 items-center">
-      <Button
-        shape="circle"
-        icon={<LeftOutlined />}
-        type="primary"
-        onClick={goPrev}
-        disabled={isStartDisabled()}
-      ></Button>
+    <div className="bg-white p-4 rounded-2xl shadow-md">
+      <h2 className="text-lg font-semibold text-textMain mb-4">
+        Group Lessons
+      </h2>
 
-      <div
-        className="overflow-scroll flex gap-1 [&::-webkit-scrollbar]:hidden"
-        ref={containerRef}
-        onScroll={handleScroll}
-      >
-        {lessons.map((lesson: Lessons) => (
-          <Tooltip
-            key={lesson.id}
-            title={
-              <div className="space-y-1">
-                <div>
-                  <strong>Status:</strong> {lesson.status || "—"}
+      <div className="flex items-center gap-3">
+        <Button
+          shape="circle"
+          icon={<LeftOutlined />}
+          type="default"
+          size="middle"
+          onClick={goPrev}
+          disabled={isStartDisabled()}
+          className="shadow-sm"
+        />
+
+        <div
+          className="flex overflow-x-auto gap-3 no-scrollbar scroll-smooth"
+          ref={containerRef}
+          onScroll={handleScroll}
+        >
+          {lessons.map((lesson: Lessons) => (
+            <Tooltip
+              key={lesson.id}
+              title={
+                <div className="space-y-1">
+                  <div>
+                    <strong>Status:</strong> {lesson.status || "—"}
+                  </div>
+                  <div>
+                    <strong>Note:</strong> {lesson.notes || "—"}
+                  </div>
                 </div>
-                <div>
-                  <strong>Note:</strong> {lesson.notes || "—"}
-                </div>
-              </div>
-            }
-          >
-            <div
-              style={{ width: "200px", height: "70px" }}
-              className={`
- w-150 h-16  flex flex-col items-center justify-center
-  rounded-lg cursor-pointer text-sm
-  bg-blue-200 hover:bg-gray-300 transition
-`}
+              }
             >
-              <span className="text-lg font-semibold">
-                {dayjs(lesson.date).format("DD")}
-              </span>
-              <span className="text-xs text-gray-600 uppercase tracking-wide">
-                {dayjs(lesson.date).format("MMM")}
-              </span>
-            </div>
-          </Tooltip>
-        ))}
-      </div>
+              <div
+                className={`
+                flex flex-col justify-center items-center flex-shrink-0 
+                w-20 h-20 bg-soft rounded-xl shadow-sm border 
+                hover:bg-primary hover:text-white transition-all duration-300
+              `}
+              >
+                <span className="text-lg font-bold">
+                  {dayjs(lesson.date).format("DD")}
+                </span>
+                <span className="text-xs uppercase tracking-wide">
+                  {dayjs(lesson.date).format("MMM")}
+                </span>
+              </div>
+            </Tooltip>
+          ))}
+        </div>
 
-      <Button
-        shape="circle"
-        type="primary"
-        onClick={goNext}
-        disabled={isEndDisabled()}
-        icon={<RightOutlined />}
-      ></Button>
+        <Button
+          shape="circle"
+          icon={<RightOutlined />}
+          type="default"
+          size="middle"
+          onClick={goNext}
+          disabled={isEndDisabled()}
+          className="shadow-sm"
+        />
+      </div>
     </div>
   );
 };

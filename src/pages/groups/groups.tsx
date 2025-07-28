@@ -13,7 +13,7 @@ const Groups = () => {
   const [update, setUpdate] = useState<Group | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 6,
+    limit: 5,
   });
 
   const location = useLocation();
@@ -87,23 +87,25 @@ const Groups = () => {
   return (
     <>
       {open && <GroupModal open={open} toggle={toggle} update={update} />}
-      <div className="w-full">
-        <h1 className="text-xl font-bold mb-2">GROUPS</h1>
 
-        {/* Tugmani chapga suradigan konteyner */}
-        <div className="flex justify-between mb-4 p-1">
-          <Input.Search
-            placeholder="Search groups..."
-            allowClear
-            enterButton
-            className="max-w-xs"
-            onSearch={(value) => console.log("Search:", value)}
-          />
+      <div className="w-full ">
+        <h1 className="text-2xl font-semibold text-gray-800 mb-4">GROUPS</h1>
+
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-6 py-2 w-full">
+          <div className="flex-1 min-w-[250px]">
+            <Input.Search
+              placeholder="Search groups..."
+              allowClear
+              enterButton
+              className="max-w-sm rounded-lg shadow-sm focus:ring-primary"
+              onSearch={(value) => console.log("Search:", value)}
+            />
+          </div>
 
           <Button
             type="primary"
             onClick={() => setOpen(true)}
-            className="!bg-blue-600 !text-white"
+            className="rounded-lg bg-[#a3c8f8] text-white px-6 py-2 hover:bg-[#8ab7f5] transition"
           >
             + add group
           </Button>
@@ -113,7 +115,7 @@ const Groups = () => {
       <Table<Group>
         columns={columns}
         dataSource={data?.data?.data}
-        rowKey={(row) => row.id!}
+        rowKey={(row, index) => row.id ?? index}
         pagination={{
           current: params.page,
           pageSize: params.limit,
