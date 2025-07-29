@@ -13,7 +13,7 @@ const Rooms = () => {
   const [update, setUpdate] = useState<Rooms | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 6,
+    limit: 5,
   });
 
   const location = useLocation();
@@ -74,12 +74,6 @@ const Rooms = () => {
             handleDelete={() => deleteItem(record.id!)}
             loading={isDeleting}
           />
-
-          {/* <Link to={`/admin/room/${record.id}`}>
-            <Button type="primary" ghost>
-              <EyeOutlined />
-            </Button>
-          </Link> */}
         </Space>
       ),
     },

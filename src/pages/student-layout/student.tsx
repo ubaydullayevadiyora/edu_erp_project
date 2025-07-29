@@ -13,7 +13,7 @@ const Students = () => {
   const [update, setUpdate] = useState<Student | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 6,
+    limit: 5,
   });
 
   const location = useLocation();
@@ -104,7 +104,7 @@ const Students = () => {
 
       <Table<Student>
         columns={columns}
-        dataSource={data?.data?.students}
+        dataSource={data?.data?.data}
         rowKey={(row) => row.id}
         pagination={{
           current: params.page,

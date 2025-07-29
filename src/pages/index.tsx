@@ -10,10 +10,10 @@ const Groups = lazy(() => import("./groups/groups"));
 const Courses = lazy(() => import("./courses/courses"));
 const LayoutProtect = lazy(() => import("./protect-routes/layout-protect"));
 const LoginProtect = lazy(() => import("./protect-routes/login-protect"));
-const BranchLayout = lazy(() => import("./branch-layout/branch"));
+const BranchLayout = lazy(() => import("./branch/branch"));
 const Worker = lazy(() => import("./worker/worker"));
 const SingleGroup = lazy(() => import("./groups/single-group"));
-const Room = lazy(() => import("./room-layout/rooms"));
+const Room = lazy(() => import("./room/rooms"));
 
 export {
   SignIn,

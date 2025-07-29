@@ -4,4 +4,5 @@ import GroupTeachers from "./group/teachers";
 import GroupStudents from "./group/students";
 import GroupLessons from "./group/lessons";
 import UserDropdown from "./user-dropdown";
-export { PopConfirm, GroupColumns, GroupLessons, GroupStudents, GroupTeachers, UserDropdown };
+import MaskedInput from "./masked-input";
+export { PopConfirm, GroupColumns, GroupLessons, GroupStudents, GroupTeachers, UserDropdown, MaskedInput };

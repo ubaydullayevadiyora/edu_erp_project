@@ -13,7 +13,7 @@ const Courses = () => {
   const [update, setUpdate] = useState<Course | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 6,
+    limit: 5,
   });
 
   const location = useLocation();

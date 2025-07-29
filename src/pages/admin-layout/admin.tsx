@@ -4,12 +4,10 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   TeamOutlined,
-  SettingOutlined,
   UserOutlined,
   PaperClipOutlined,
   UserSwitchOutlined,
   AppstoreOutlined,
-  // DoubleRightOutlined,
   InsertRowLeftOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
@@ -62,12 +60,6 @@ const AdminLayout = () => {
       icon: <InsertRowLeftOutlined />,
       label: "Rooms",
       onClick: () => navigate("/admin/rooms"),
-    },
-    {
-      key: "settings",
-      icon: <SettingOutlined />,
-      label: "Settings",
-      onClick: () => navigate("/admin/settings"),
     },
   ];
 

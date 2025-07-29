@@ -72,8 +72,8 @@ export const studentFormSchema = yup.object().shape({
 
   phone: yup
     .string()
-    .required("Phone number is required")
-    .matches(/^\+998\d{9}$/, "Phone must be in +998XXXXXXXXX format"),
+    .required("Call number is required")
+    .matches(/^\+998 \(\d{2}\) \d{3}-\d{2}-\d{2}$/, "Call number is invalid"),
 
   password: yup.string().when("update", {
     is: false, // only required when creating
@@ -115,8 +115,8 @@ export const teacherFormSchema = yup.object().shape({
     }),
   phone: yup
     .string()
-    .required("Phone number is required")
-    .matches(/^(\+998)?[0-9]{9,12}$/, "Phone number is invalid"),
+    .required("Call number is required")
+    .matches(/^\+998 \(\d{2}\) \d{3}-\d{2}-\d{2}$/, "Call number is invalid"),
   role: yup.string().required("Role is required"),
 
   branchId: yup.array().of(yup.number()).required("Select Branch"),
@@ -131,7 +131,7 @@ export const branchFormSchema = yup.object().shape({
   call_number: yup
     .string()
     .required("Call number is required")
-    .matches(/^(\+998)?[0-9]{9,12}$/, "Call number is invalid"),
+    .matches(/^\+998 \(\d{2}\) \d{3}-\d{2}-\d{2}$/, "Call number is invalid"),
 });
 
 // rooms

@@ -6,13 +6,14 @@ import { studentFormSchema } from "@utils";
 import type { ModalProps, Student } from "@types";
 import { useStudent } from "@hooks";
 import dayjs from "dayjs";
+import { MaskedInput } from "@components";
 
 interface StudentProps extends ModalProps {
   update: Student | null;
 }
 
 const StudentModal = ({ open, toggle, update }: StudentProps) => {
-  const params = { page: 1, limit: 6 };
+  const params = { page: 1, limit: 5 };
   const { useStudentCreate, useStudentUpdate } = useStudent(params);
   const { mutate: createFn, isPending: isCreating } = useStudentCreate();
   const { mutate: updateFn, isPending: isUpdating } = useStudentUpdate();
@@ -97,7 +98,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             render={({ field }) => <Input {...field} placeholder="Firstname" />}
           />
         </Form.Item>
-
         <Form.Item
           label="Last Name"
           validateStatus={errors.last_name ? "error" : ""}
@@ -109,7 +109,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             render={({ field }) => <Input {...field} placeholder="Lastname" />}
           />
         </Form.Item>
-
         <Form.Item
           label="Email"
           validateStatus={errors.email ? "error" : ""}
@@ -130,7 +129,13 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
           <Controller
             name="phone"
             control={control}
-            render={({ field }) => <Input {...field} placeholder="Phone" />}
+            render={({ field }) => (
+              <MaskedInput
+                {...field}
+                mask="+\9\98 (00) 000-00-00"
+                placeholder="Phone number"
+              />
+            )}
           />
         </Form.Item>
 
@@ -149,7 +154,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             />
           </Form.Item>
         )}
-
         {!update?.id && (
           <Form.Item
             label="Confirm Password"
@@ -165,7 +169,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             />
           </Form.Item>
         )}
-
         <Form.Item
           label="Gender"
           validateStatus={errors.gender ? "error" : ""}
@@ -186,7 +189,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             )}
           />
         </Form.Item>
-
         <Form.Item
           label="Date of Birth"
           validateStatus={errors.date_of_birth ? "error" : ""}
@@ -207,7 +209,6 @@ const StudentModal = ({ open, toggle, update }: StudentProps) => {
             )}
           />
         </Form.Item>
-
         <Form.Item>
           <Button
             type="primary"

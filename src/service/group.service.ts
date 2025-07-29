@@ -9,7 +9,9 @@ export const groupService = {
   },
 
   async getGroupStudents(id: number) {
-    const res = await apiConfig().getRequest(`${ApiUrls.GROUP_STUDENTS_BY_GROUP_ID}/${id}`);
+    const res = await apiConfig().getRequest(
+      `${ApiUrls.GROUP_STUDENTS_BY_GROUP_ID}/${id}`
+    );
     return res;
   },
 
@@ -19,7 +21,9 @@ export const groupService = {
   },
 
   async getGroupTeachers(id: number) {
-    const res = await apiConfig().getRequest(`${ApiUrls.GROUP_TEACHERS_BY_GROUP_ID}/${id}`);
+    const res = await apiConfig().getRequest(
+      `${ApiUrls.GROUP_TEACHERS_BY_GROUP_ID}/${id}`
+    );
     return res;
   },
 
@@ -40,4 +44,9 @@ export const groupService = {
     const res = await apiConfig().deleteRequest(`${ApiUrls.GROUPS}/${id}`);
     return res;
   },
+
+  // async searchGroup(search: string) {
+  //   const res = await axios.get(`/groups?search=${search}`);
+  //   return res.data;
+  // },
 };

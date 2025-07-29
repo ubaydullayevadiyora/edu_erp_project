@@ -13,7 +13,7 @@ const Teachers = () => {
   const [update, setUpdate] = useState<Teacher | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 6,
+    limit: 5,
   });
 
   const location = useLocation();
@@ -102,7 +102,7 @@ const Teachers = () => {
       </div>
       <Table<Teacher>
         columns={columns}
-        dataSource={data?.data?.teachers}
+        dataSource={data?.data?.data}
         rowKey={(row) => row.id!}
         pagination={{
           current: params.page,

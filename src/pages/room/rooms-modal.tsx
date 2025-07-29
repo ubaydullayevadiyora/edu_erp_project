@@ -15,7 +15,7 @@ const RoomModal = ({ open, toggle, update }: RoomModalProps) => {
   const { useRoomCreate, useRoomUpdate } = useRoom(params);
   const { mutate: createFn, isPending: isCreating } = useRoomCreate();
   const { mutate: updateFn, isPending: isUpdating } = useRoomUpdate();
-  const {data} = useBranch({ page: 1, limit: 6 });
+  const { data } = useBranch({ page: 1, limit: 6 });
 
   const {
     control,
@@ -52,6 +52,12 @@ const RoomModal = ({ open, toggle, update }: RoomModalProps) => {
     }
   };
 
+  const getBranchName = (id: number) => {
+    return data?.data?.branches?.find((branch: any) => branch.id === id)?.name;
+  };
+
+  const branches = data?.data?.branches || [];
+
   return (
     <Modal
       title="Room Modal"
@@ -61,6 +67,13 @@ const RoomModal = ({ open, toggle, update }: RoomModalProps) => {
       width={700}
       footer={null}
     >
+      {update?.branchId && (
+        <div style={{ marginBottom: 16 }}>
+          <strong>Branch:</strong>{" "}
+          {getBranchName(update.branchId) || "Not found"}
+        </div>
+      )}
+
       <Form
         layout="vertical"
         autoComplete="on"
@@ -74,31 +87,18 @@ const RoomModal = ({ open, toggle, update }: RoomModalProps) => {
           <Controller
             name="branchId"
             control={control}
-            render={({ field }) => {
-              // Unikal branchlar
-              const branches = Array.from(
-                new Map(
-                  (data?.data?.rooms ?? []).map((room: any) => [
-                    room.branch.id,
-                    room.branch,
-                  ])
-                ).values()
-              );
-
-              return (
-                <Select
-                  {...field}
-                  mode="multiple"
-                  showSearch
-                  placeholder="Search branch"
-                  optionFilterProp="label"
-                  options={branches.map((branch: any) => ({
-                    value: branch.id,
-                    label: branch.name,
-                  }))}
-                />
-              );
-            }}
+            render={({ field }) => (
+              <Select
+                {...field}
+                showSearch
+                placeholder="Search branch"
+                optionFilterProp="label"
+                options={branches.map((branch: any) => ({
+                  value: branch.id,
+                  label: branch.name,
+                }))}
+              />
+            )}
           />
         </Form.Item>
 

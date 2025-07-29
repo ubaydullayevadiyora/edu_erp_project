@@ -1,7 +1,6 @@
-// components/user-dropdown.tsx
 import { Avatar, Dropdown, Typography, type MenuProps } from "antd";
 import {
-  LogoutOutlined,
+  DoubleRightOutlined,
   SettingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -10,27 +9,19 @@ import { useEffect, useState } from "react";
 
 const UserDropdown = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<{
-    first_name: string;
-    role: string;
-    avatar_url?: string;
-  } | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsed = JSON.parse(userData);
-      console.log("Parsed user:", parsed); // ✅ log for testing
-      setUser(parsed);
+    const roleFromStorage = localStorage.getItem("role");
+    if (roleFromStorage) {
+      setRole(roleFromStorage);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/login");
+    navigate("/");
   };
-
-  if (!user) return null;
 
   const menuItems: MenuProps["items"] = [
     {
@@ -39,7 +30,7 @@ const UserDropdown = () => {
       icon: <UserOutlined />,
       onClick: () => navigate("/profile"),
     },
-    ...(user.role === "admin"
+    ...(role === "admin"
       ? [
           {
             key: "settings",
@@ -55,19 +46,17 @@ const UserDropdown = () => {
     {
       key: "logout",
       label: "Log out",
-      icon: <LogoutOutlined />,
+      icon: <DoubleRightOutlined />,
       danger: true,
       onClick: handleLogout,
     },
   ];
 
   return (
-    <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
+    <Dropdown menu={{ items: menuItems }} trigger={["hover"]}>
       <div className="cursor-pointer flex items-center gap-2">
-        <Avatar src={user.avatar_url}>
-          {user.first_name?.charAt(0).toUpperCase()}
-        </Avatar>
-        <Typography.Text strong>{user.first_name}</Typography.Text>
+        <Avatar>{role?.charAt(0).toUpperCase()}</Avatar>
+        <Typography.Text strong>{role}</Typography.Text>
       </div>
     </Dropdown>
   );

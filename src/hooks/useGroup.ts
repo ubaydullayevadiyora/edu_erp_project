@@ -10,7 +10,14 @@ export const useGroup = (params: ParamsType, id?: number) => {
     queryKey: ["groups", params],
     queryFn: async () => groupService.getGroups(params),
   });
-  
+
+  // const searchGroupQuery = useQuery({
+  //   enabled: !!params?.search, 
+  //   queryKey: ["search-group", params.search],
+  //   queryFn: async () => groupService.searchGroup(params.search!),
+  // });
+  // const searchedGroups = searchGroupQuery.data;
+
   const groupStudentsQuery = useQuery({
     enabled: !!id,
     queryKey: ["group-students"],
@@ -62,6 +69,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
     students,
     lessons,
     teachers,
+    // searchedGroups,
     useGroupCreate,
     useGroupUpdate,
     useGroupDelete,

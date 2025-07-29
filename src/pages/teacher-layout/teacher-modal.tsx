@@ -5,17 +5,18 @@ import { useEffect } from "react";
 import type { ModalProps, Teacher } from "@types";
 import { teacherFormSchema } from "@utils";
 import { useBranch, useTeacher } from "@hooks";
+import { MaskedInput } from "@components";
 
 interface TeacherProps extends ModalProps {
   update: Teacher | null;
 }
 
 const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
-  const params = { page: 1, limit: 6 };
+  const params = { page: 1, limit: 5 };
   const { useTeacherCreate, useTeacherUpdate } = useTeacher(params);
   const { mutate: createFn, isPending: isCreating } = useTeacherCreate();
   const { mutate: updateFn, isPending: isUpdating } = useTeacherUpdate();
-  const { data } = useBranch({ page: 1, limit: 6 });
+  const { data } = useBranch({ page: 1, limit: 5 });
 
   const {
     control,
@@ -139,7 +140,13 @@ const TeacherModal = ({ open, toggle, update }: TeacherProps) => {
           <Controller
             name="phone"
             control={control}
-            render={({ field }) => <Input {...field} placeholder="+998..." />}
+            render={({ field }) => (
+              <MaskedInput
+                {...field}
+                mask="+\9\98 (00) 000-00-00"
+                placeholder="Phone number"
+              />
+            )}
           />
         </Form.Item>
 
