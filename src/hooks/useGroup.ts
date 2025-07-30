@@ -3,7 +3,6 @@ import { groupService } from "@service";
 import { type Group, type ParamsType } from "@types";
 
 export const useGroup = (params: ParamsType, id?: number) => {
-
   const queryClient = useQueryClient();
 
   const { data } = useQuery({
@@ -12,7 +11,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
   });
 
   // const searchGroupQuery = useQuery({
-  //   enabled: !!params?.search, 
+  //   enabled: !!params?.search,
   //   queryKey: ["search-group", params.search],
   //   queryFn: async () => groupService.searchGroup(params.search!),
   // });
@@ -50,7 +49,8 @@ export const useGroup = (params: ParamsType, id?: number) => {
   };
   const useGroupUpdate = () => {
     return useMutation({
-      mutationFn: async ({id, ...rest}:Group) => groupService.updateGroup(id, rest),
+      mutationFn: async ({ id, ...rest }: Group) =>
+        groupService.updateGroup(id, rest),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["groups"] });
       },
@@ -64,8 +64,19 @@ export const useGroup = (params: ParamsType, id?: number) => {
       },
     });
   };
+
+  const groupQuery = useQuery({
+    enabled: !!id,
+    queryKey: ["single-group", id],
+    queryFn: async () => groupService.getGroup(id!),
+    retry: false, // 404 qaytsa, qayta urunmasin
+  });
+  const group = groupQuery.data;
+
+
   return {
     data,
+    group,
     students,
     lessons,
     teachers,

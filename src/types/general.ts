@@ -27,4 +27,5 @@ export interface Lessons {
   title: string;
   status: string;
   date: string;
+  studentId?: number;
 }

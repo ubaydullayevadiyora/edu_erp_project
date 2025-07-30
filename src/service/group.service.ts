@@ -49,4 +49,13 @@ export const groupService = {
   //   const res = await axios.get(`/groups?search=${search}`);
   //   return res.data;
   // },
+
+  async getGroup(id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.GROUPS}/${id}`);
+    if (res?.data?.data?.length) {
+      return res.data.data[0];
+    }
+    // Bu yerda fallback qaytaring
+    return null;
+  },
 };

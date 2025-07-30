@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import type { Lessons } from "./general";
 import type { Student } from "./student";
 import type { Teacher } from "./teacher";
-
+// GROUP
 export interface Group {
   id: number;
   name: string;
@@ -12,9 +12,13 @@ export interface Group {
   start_time: dayjs.Dayjs | null;
   room: {
     id: number;
+    name: string;
   };
   course: {
     id: number;
+    name: string;
+    price: number;
+    duration: number;
   };
 }
 
@@ -28,4 +32,5 @@ export interface GroupStudentsType {
 
 export interface GroupTeachersType {
   teachers: Teacher[];
+  groupId: number;
 }

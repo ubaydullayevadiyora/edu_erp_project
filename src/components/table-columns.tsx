@@ -1,4 +1,4 @@
-import { type TableProps } from "antd";
+import { Tooltip, type TableProps } from "antd";
 
 import type { Branch, Course, Group, Rooms, Student, Teacher } from "@types";
 
@@ -50,6 +50,30 @@ export const CourseColumns: TableProps<Course>["columns"] = [
     title: "Description",
     dataIndex: "description",
     key: "description",
+    render: (text: string) => {
+      const maxLength = 30;
+
+      if (text.length > maxLength) {
+        const shortText = text.slice(0, maxLength) + "...";
+
+        return (
+          <Tooltip title={text}>
+            <div
+              style={{
+                maxWidth: 200,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {shortText}
+            </div>
+          </Tooltip>
+        );
+      }
+
+      return <div>{text}</div>;
+    },
   },
   {
     title: "Price",
@@ -71,7 +95,6 @@ export const CourseColumns: TableProps<Course>["columns"] = [
     dataIndex: "lesson_duration",
     key: "lesson_duration",
   },
-
 ];
 
 // student

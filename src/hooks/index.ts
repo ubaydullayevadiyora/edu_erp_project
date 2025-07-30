@@ -8,3 +8,4 @@ export * from "./useBranch";
 export * from "./useWorker"
 export * from "./useRooms"
 export * from "./useDebounce"
+export * from "./useLesson"

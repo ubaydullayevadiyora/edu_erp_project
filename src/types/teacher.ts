@@ -3,9 +3,9 @@ export interface Teacher {
   first_name: string;
   last_name: string;
   email: string;
-  password?: string; // optional qiling, update holatida kerak emas
+  password?: string; 
   phone: string;
   role: string;
-  branchId: number[]; // formga yuboriladigan
-  branches?: { id: number; name: string }[]; // update uchun optional va typed
+  branchId: number[]; 
+  branches?: { id: number; name: string }[]; 
 }
