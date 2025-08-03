@@ -1,153 +1,88 @@
-import { Collapse, Table, Button, Modal, message } from "antd";
-import { useStudent } from "@hooks";
 import { useState } from "react";
-import type { Student, Lessons } from "@types";
-import { minimalStudentColumns } from "../table-columns";
-import LessonsLists from "../lessons-lists/lessons-lists";
+import { Button, Table, Tag } from "antd";
+import { UserPlus } from "lucide-react";
+import AddTeacherOrStudentModal from "./modal";
+import type { GroupStudentsType } from "@types";
+import dayjs from "dayjs";
 
-interface Props {
-  students: Student[]; 
-  lessons: Lessons[]; 
-  onAddStudents?: (studentIds: React.Key[]) => void; 
-  groupId?: number; 
-}
+type Props = GroupStudentsType & { groupId: number };
 
-const GroupStudents = ({
-  students,
-  lessons,
-  onAddStudents,
-  
-}: Props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [params] = useState({ page: 1, limit: 100 });
-  const [localStudents, setLocalStudents] = useState<Student[]>(students); 
+const GroupStudents = ({ students, groupId }: Props) => {
+  const [open, setOpen] = useState(false);
 
-  const { data: allStudentsData } = useStudent(params); 
+  const columns = [
+    {
+      title: "First Name",
+      dataIndex: "first_name",
+      key: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
+      key: "last_name",
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Joined At",
+      dataIndex: "joined_at",
+      key: "joined_at",
+      render: (date: string) => dayjs(date).format("YYYY-MM-DD"),
+    },
+    {
+      title: "Status",
+      dataIndex: "is_active",
+      key: "status",
+      render: (isActive: boolean) => (
+        <Tag color={isActive ? "green" : "red"}>
+          {isActive ? "Active" : "Inactive"}
+        </Tag>
+      ),
+    },
+  ];
 
-  console.log("All students data:", allStudentsData);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedRowKeys([]);
-  };
 
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
-
-  const handleAddStudentsToGroup = async () => {
-    console.log("Qo'shiladigan student ID'lar:", selectedRowKeys);
-
-    try {
-      const selectedStudents =
-        allStudentsData?.data?.filter((student: Student) =>
-          selectedRowKeys.includes(student.id)
-        ) || [];
-
-      setLocalStudents((prev) => [...prev, ...selectedStudents]);
-
-      if (onAddStudents && selectedRowKeys.length > 0) {
-        await onAddStudents(selectedRowKeys);
-      }
-
-      message.success(
-        `${selectedRowKeys.length} ta student guruhga qo'shildi!`
-      );
-      closeModal();
-    } catch (error) {
-      console.error("Xatolik:", error);
-      message.error("Studentlarni qo'shishda xatolik yuz berdi!");
-    }
-  };
-  // COLLAPSE ITEM
-  const collapseItems = Array.isArray(localStudents)
-    ? localStudents.map((student) => {
-       
-        const studentLessons = Array.isArray(lessons)
-          ? lessons.filter((lesson) => {
-             
-              if (Array.isArray(lesson.studentId)) {
-                return lesson.studentId.includes(student.id);
-              }
-             
-              return lesson.studentId === student.id;
-            })
-          : [];
-
-        return {
-          key: student.id,
-          label: `${student.first_name} ${student.last_name || ""}`.trim(),
-          children: (
-            <div className="space-y-2">
-              {studentLessons && studentLessons.length > 0 ? (
-                <LessonsLists lessons={studentLessons} />
-              ) : (
-                <p className="text-gray-500 italic">
-                  Hali darslar tayinlanmagan
-                </p>
-              )}
-            </div>
-          ),
-        };
-      })
-    : [];
+  const studentLists = students?.map((item: any) => item.student) || [];
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-textMain">Group Students</h2>
-        <Button type="primary" onClick={openModal}>
-          + Add student
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold">Students</h2>
+        <Button
+          icon={<UserPlus size={16} />}
+          type="primary"
+          onClick={() => setOpen(true)}
+        >
+          Add
         </Button>
       </div>
 
-      {/* GROUP STUDENTS*/}
-      {collapseItems.length > 0 ? (
-        <Collapse accordion items={collapseItems} className="bg-gray-50" />
-      ) : (
-        <div className="text-center py-8 text-gray-500">
-          <p>Bu guruhda hali studentlar yo'q.</p>
-          <p className="text-sm">
-            "+ Add student" tugmasini bosib studentlar qo'shing.
-          </p>
-        </div>
-      )}
+      {/* Studentlar jadvali */}
+      <Table
+        dataSource={studentLists}
+        columns={columns}
+        rowKey="id"
+        pagination={false}
+      />
 
-      <Modal
-        title="Guruhga studentlar qo'shish"
-        open={isModalOpen}
-        onCancel={closeModal}
-        onOk={handleAddStudentsToGroup}
-        okText="Tanlanganni qo'shish"
-        cancelText="Bekor qilish"
-        okButtonProps={{ disabled: selectedRowKeys.length === 0 }}
-        width={600}
-      >
-        <Table<Student>
-          columns={minimalStudentColumns}
-          dataSource={
-            Array.isArray(allStudentsData?.data.data)
-              ? allStudentsData.data.data.filter(
-                  (student:Student) =>
-                    !localStudents.some(
-                      (groupStudent) => groupStudent.id === student.id
-                    )
-                )
-              : []
-          }
-          rowKey={(row) => row.id}
-          rowSelection={{
-            selectedRowKeys,
-            onChange: onSelectChange,
-          }}
-          pagination={false}
-          size="small"
-          locale={{ emptyText: "Qo'shish uchun studentlar topilmadi" }}
-        />
-      </Modal>
+      {/* <div>
+        {students.map((item:any)=>(
+          <div key={item.student.id}>{item.student.first_name}</div>
+        ))}
+
+      </div> */}
+
+      {/* Add modal */}
+      <AddTeacherOrStudentModal
+        open={open}
+        toggle={() => setOpen(false)}
+        addingTeacher={false}
+        groupId={groupId}
+      />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-// import type { TablePaginationConfig } from "antd";
 import type { TablePaginationConfig } from "antd";
 import type { ReactNode } from "react";
 

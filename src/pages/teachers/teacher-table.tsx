@@ -30,8 +30,11 @@ const Teachers = () => {
     }
   }, [location.search]);
 
+  // teacher hook
   const { data, useTeacherDelete } = useTeacher(params);
-  const { mutate: deleteFn, isPending: isDeleting } = useTeacherDelete();
+
+const { mutate: deleteFn, isPending } = useTeacherDelete();
+
   const { handlePagination } = useGeneral();
 
   const deleteItem = (id: number) => {
@@ -68,7 +71,7 @@ const Teachers = () => {
           </Button>
           <PopConfirm
             handleDelete={() => deleteItem(record.id)}
-            loading={isDeleting}
+            loading={isPending}
           />
         </Space>
       ),
@@ -81,7 +84,6 @@ const Teachers = () => {
       <div className="w-full">
         <h1 className="text-xl font-bold mb-2">TEACHERS</h1>
 
-        {/* Tugmani chapga suradigan konteyner */}
         <div className="flex justify-between mb-4 p-1">
           <Input.Search
             placeholder="Search teachers..."
@@ -100,6 +102,7 @@ const Teachers = () => {
           </Button>
         </div>
       </div>
+
       <Table<Teacher>
         columns={columns}
         dataSource={data?.data?.data}

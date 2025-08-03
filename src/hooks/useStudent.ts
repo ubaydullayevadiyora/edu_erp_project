@@ -4,33 +4,36 @@ import { type Student, type ParamsType } from "@types";
 
 export const useStudent = (params: ParamsType) => {
   const queryClient = useQueryClient();
-  
+
+  // All Students List
   const { data } = useQuery({
     queryKey: ["students", params],
-    queryFn: async () => studentService.getStudents(params),
+    queryFn: () => studentService.getStudents(params),
   });
 
   // Mutations
   const useStudentCreate = () => {
     return useMutation({
-      mutationFn: async (data: Student) => studentService.createStudent(data),
+      mutationFn: (data: Student) => studentService.createStudent(data),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["students"] });
       },
     });
   };
+
   const useStudentUpdate = () => {
     return useMutation({
-      mutationFn: async ({ id, ...rest }: Student) =>
+      mutationFn: ({ id, ...rest }: Student) =>
         studentService.updateStudent(id, rest),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["students"] });
       },
     });
   };
+
   const useStudentDelete = () => {
     return useMutation({
-      mutationFn: async (id: number) => studentService.deleteStudent(id),
+      mutationFn: (id: number) => studentService.deleteStudent(id),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["students"] });
       },
@@ -38,7 +41,7 @@ export const useStudent = (params: ParamsType) => {
   };
 
   return {
-    data,
+    data, // student list
     useStudentCreate,
     useStudentUpdate,
     useStudentDelete,

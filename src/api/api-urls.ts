@@ -11,14 +11,19 @@ export class ApiUrls {
   // students
   public static STUDENT: string = "/students";
 
-  //teachers
+  // TEACHER
   public static TEACHER: string = "/teacher";
+  public static TEACHER_GROUPS: string = "/group";
 
   // branch
   public static BRANCH: string = "/branches";
 
   // rooms
   public static ROOM: string = "/rooms";
+
+  // ADMIN
+  public static ADMIN: string = "/admin";
+  public static ADMIN_PROFILE: string = this.ADMIN + "/profile";
 
   // LESSONS
   public static LESSONS: string = "/lessons";

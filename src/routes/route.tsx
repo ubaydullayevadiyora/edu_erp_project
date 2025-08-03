@@ -1,6 +1,5 @@
 import {
   createRoutesFromElements,
-  Navigate,
   RouterProvider,
 } from "react-router-dom";
 import { createBrowserRouter, Route } from "react-router-dom";
@@ -16,9 +15,17 @@ import {
   Courses,
   LayoutProtect,
   LoginProtect,
-  BranchLayout,
+  Branch,
   SingleGroup,
   Room,
+  AdminProfile,
+  TeacherProfile,
+  StudentProfile,
+  Students,
+  Teachers,
+  TeacherGroupStudents,
+  TeacherGroups,
+  TeacherDashboard,
 } from "@pages";
 
 const Router = () => {
@@ -44,21 +51,39 @@ const Router = () => {
             </LayoutProtect>
           }
         >
-          <Route index element={<Navigate to="groups" replace />} />
+          {/* Dashboard asosiy sahifa */}
+          {/* <Route index element={<AdminDashboard />} /> */}
+
+          {/* <Route path="dashboard" element={<AdminDashboard />} /> */}
           <Route path="group/:id" element={<SingleGroup />} />
-          <Route path="groups" element={<Groups />} />
+          <Route index element={<Groups />} />
           <Route path="courses" element={<Courses />} />
-          <Route path="student" element={<StudentLayout />} />
-          <Route path="teacher" element={<TeacherLayout />} />
-          <Route path="branches" element={<BranchLayout />} />
+          <Route path="student" element={<Students />} />
+          <Route path="teacher" element={<Teachers />} />
+          <Route path="branches" element={<Branch />} />
           <Route path="rooms" element={<Room />} />
+          <Route path="profile" element={<AdminProfile />} />
         </Route>
 
-        {/* teacher layout */}
-        <Route path="teacher" element={<TeacherLayout />}></Route>
+        <Route
+          path="teacher"
+          element={
+            <LayoutProtect>
+              <TeacherLayout />
+            </LayoutProtect>
+          }
+        >
+          <Route index element={<TeacherDashboard />} />{" "}
+          {/* Dashboard shown first */}
+          <Route path="groups" element={<TeacherGroups />} />
+          <Route path="group-students/:id" element={<TeacherGroupStudents />} />
+          <Route path="profile" element={<TeacherProfile />} />
+        </Route>
 
         {/* student layout */}
-        <Route path="student" element={<StudentLayout />}></Route>
+        <Route path="student" element={<StudentLayout />}>
+          <Route path="profile" element={<StudentProfile />} />
+        </Route>
 
         {/* not found */}
         <Route path="*" element={<NotFound />} />

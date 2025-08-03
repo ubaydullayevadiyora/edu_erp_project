@@ -7,7 +7,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
 
   const { data } = useQuery({
     queryKey: ["groups", params],
-    queryFn: async () => groupService.getGroups(params),
+    queryFn: async () => groupService.getGroups(params,),
   });
 
   // const searchGroupQuery = useQuery({
@@ -65,18 +65,27 @@ export const useGroup = (params: ParamsType, id?: number) => {
     });
   };
 
-  const groupQuery = useQuery({
-    enabled: !!id,
-    queryKey: ["single-group", id],
-    queryFn: async () => groupService.getGroup(id!),
-    retry: false, // 404 qaytsa, qayta urunmasin
-  });
-  const group = groupQuery.data;
+  const useGroupAddStudent = () => {
+    return useMutation({
+      mutationFn: async (data: any) => groupService.addStudentToGroup(data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["group-student"] });
+      },
+    });
+  };
 
+  const useGroupAddTeacher = () => {
+    return useMutation({
+      mutationFn: async (data: any) => groupService.addTeacherToGroup(data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["groups", "add-teacher"] });
+      },
+    });
+   
+  };
 
   return {
     data,
-    group,
     students,
     lessons,
     teachers,
@@ -84,5 +93,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
     useGroupCreate,
     useGroupUpdate,
     useGroupDelete,
+    useGroupAddStudent,
+    useGroupAddTeacher,
   };
 };

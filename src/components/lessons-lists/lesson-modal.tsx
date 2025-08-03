@@ -1,5 +1,3 @@
-// components/LessonModal.tsx
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLessons } from "@hooks";
 import { useQueryClient } from "@tanstack/react-query";

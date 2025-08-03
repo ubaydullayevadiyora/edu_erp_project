@@ -10,8 +10,8 @@ const SingleGroup = () => {
   const { id } = useParams<{ id: string }>();
   const numericId = Number(id);
 
-  const { group, students, lessons, teachers } = useGroup(
-    { page: 1, limit: 10 },
+  const { data, students, lessons, teachers } = useGroup(
+    { page: 1, limit: 6 },
     numericId
   );
 
@@ -21,54 +21,52 @@ const SingleGroup = () => {
         {/* Teachers Card */}
         {teachers?.data?.length > 0 && (
           <div className="flex-1 min-w-[300px] shadow-md rounded-2xl p-4 bg-white">
-            <GroupTeachers teachers={teachers?.data.data} groupId={0} />
+            <GroupTeachers
+              teachers={teachers?.data}
+              groupId={numericId}
+            />
           </div>
         )}
 
         {/* Group Info Card */}
         <div className="flex-1 min-w-[300px] shadow-md rounded-2xl p-4 bg-white">
-          <h1 className="text-lg font-semibold mb-2 text-gray-800">
+          <h1 className="text-lg font-semibold mb-2 text-gray-800 p-1">
             Group Information
           </h1>
-          <Collapse
+          <Collapse 
             defaultActiveKey={["1"]}
             className="bg-white rounded-xl border-none"
           >
             <Panel header="Group Details" key="1">
-              {group ? (
-                <div className="space-y-2 text-gray-700">
-                  <p>
-                    <strong>Group Name:</strong> {group.name}
-                  </p>
-                  <p>
-                    <strong>Course ID:</strong> {group.course?.id ?? "N/A"}
-                  </p>
-                  <p>
-                    <strong>Room ID:</strong> {group.room?.id ?? "N/A"}
-                  </p>
-                  <p>
-                    <strong>Status:</strong> {group.status ?? "N/A"}
-                  </p>
-                  <p>
-                    <strong>Start Date:</strong>{" "}
-                    {group.start_date
-                      ? dayjs(group.start_date).format("YYYY-MM-DD")
-                      : "N/A"}
-                  </p>
-                  <p>
-                    <strong>Start Time:</strong>{" "}
-                    {group.start_time
-                      ? dayjs(group.start_time).format("HH:mm")
-                      : "N/A"}
-                  </p>
-                  <p>
-                    <strong>Students Count:</strong>{" "}
-                    {students?.data?.length ?? 0}
-                  </p>
-                </div>
-              ) : (
-                <p className="text-gray-500">Ma'lumotlar hali kiritilmagan.</p>
-              )}
+              <div className="space-y-2 text-gray-700">
+                <p>
+                  <strong>Group Name:</strong> {data?.data.name}
+                </p>
+                <p>
+                  <strong>Course Title:</strong> {data?.data.course?.title}
+                </p>
+                <p>
+                  <strong>Room Name:</strong> {data?.data.lessons?.room?.name}
+                </p>
+                <p>
+                  <strong>Status:</strong> {data?.data.status}
+                </p>
+                <p>
+                  <strong>Start Date:</strong>{" "}
+                  {data?.data.start_date
+                    ? dayjs(data?.data.start_date).format("YYYY-MM-DD")
+                    : "no data"}
+                </p>
+                <p>
+                  <strong>Start Time:</strong>{" "}
+                  {data?.data.start_time
+                    ? dayjs(data?.data.start_time).format("HH:mm")
+                    : "no data"}
+                </p>
+                <p>
+                  <strong>Students Count:</strong> {students?.data?.length ?? 0}
+                </p>
+              </div>
             </Panel>
           </Collapse>
         </div>
@@ -82,11 +80,11 @@ const SingleGroup = () => {
       )}
 
       {/* Students */}
-      {students?.data?.length > 0 && (
-        <div className="shadow-md rounded-2xl p-4 bg-white">
-          <GroupStudents students={students?.data} lessons={lessons?.data} />
-        </div>
-      )}
+
+      <div className="shadow-md rounded-2xl p-4 bg-white">
+        
+        <GroupStudents students={students?.data} groupId={numericId} />
+      </div>
     </div>
   );
 };

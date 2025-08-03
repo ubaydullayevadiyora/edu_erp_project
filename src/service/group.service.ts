@@ -50,12 +50,18 @@ export const groupService = {
   //   return res.data;
   // },
 
-  async getGroup(id: number) {
-    const res = await apiConfig().getRequest(`${ApiUrls.GROUPS}/${id}`);
-    if (res?.data?.data?.length) {
-      return res.data.data[0];
-    }
-    // Bu yerda fallback qaytaring
-    return null;
+  async addStudentToGroup(data: any) {
+    const res = await apiConfig().postRequest(
+      `${ApiUrls.GROUP_STUDENTS}`,
+      data
+    );
+    return res;
+  },
+  async addTeacherToGroup(data: any) {
+    const res = await apiConfig().postRequest(
+      `${ApiUrls.GROUP_TEACHERS}`,
+      data
+    );
+    return res;
   },
 };

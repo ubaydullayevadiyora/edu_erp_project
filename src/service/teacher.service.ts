@@ -9,7 +9,10 @@ export const teacherService = {
   },
 
   async getTeacherStudents(params: ParamsType, id: number) {
-    const res = await apiConfig().getRequest(`${ApiUrls.TEACHER}/${id}`, params);
+    const res = await apiConfig().getRequest(
+      `${ApiUrls.TEACHER}/${id}`,
+      params
+    );
     return res;
   },
 
@@ -28,6 +31,30 @@ export const teacherService = {
 
   async deleteTeacher(id: number): Promise<any> {
     const res = await apiConfig().deleteRequest(`${ApiUrls.TEACHER}/${id}`);
+    return res;
+  },
+
+  async setImage(data: FormData, id: number) {
+    const res = await apiConfig().postRequest(
+      `${ApiUrls.TEACHER}/${id}/avatar`,
+      data
+    );
+    return res;
+  },
+  async getTeacherGroups() {
+    const res = await apiConfig().getRequest(ApiUrls.TEACHER_GROUPS);
+    return res;
+  },
+  async getTeacherGroupById(id: number) {
+    const res = await apiConfig().getRequest(
+      `${ApiUrls.TEACHER_GROUPS}/${id}/teacher`
+    );
+    return res;
+  },
+  // teacherService.ts
+
+  async getTeacherById(id: number) {
+    const res = await apiConfig().getRequest(`${ApiUrls.TEACHER}/${id}`);
     return res;
   },
 };

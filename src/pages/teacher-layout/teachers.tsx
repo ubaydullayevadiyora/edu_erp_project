@@ -3,19 +3,15 @@ import { useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
+  PieChartOutlined,
   TeamOutlined,
-  UserOutlined,
-  PaperClipOutlined,
-  UserSwitchOutlined,
-  InsertRowLeftOutlined,
-  BranchesOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
-import { UserDropdown } from "../../components";
+import { UserDropdown } from "@components";
 
 const { Header, Sider, Content } = Layout;
 
-const AdminLayout = () => {
+const TeacherLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,62 +22,31 @@ const AdminLayout = () => {
 
   const menuItems = [
     {
+      key: "dashboard",
+      icon: <PieChartOutlined />,
+      label: "Dashboard",
+      onClick: () => navigate("/teacher"),
+    },
+    {
       key: "groups",
       icon: <TeamOutlined />,
-      label: "Groups",
-      onClick: () => navigate("/admin/groups"),
-    },
-    {
-      key: "courses",
-      icon: <PaperClipOutlined />,
-      label: "Courses",
-      onClick: () => navigate("/admin/courses"),
-    },
-    {
-      key: "student",
-      icon: <UserOutlined />,
-      label: "Student",
-      onClick: () => navigate("/admin/student"),
-    },
-    {
-      key: "teacher",
-      icon: <UserSwitchOutlined />,
-      label: "Teacher",
-      onClick: () => navigate("/admin/teacher"),
-    },
-    {
-      key: "branches",
-      icon: <BranchesOutlined />,
-      label: "Branches",
-      onClick: () => navigate("/admin/branches"),
-    },
-    {
-      key: "rooms",
-      icon: <InsertRowLeftOutlined />,
-      label: "Rooms",
-      onClick: () => navigate("/admin/rooms"),
+      label: "My Groups",
+      onClick: () => navigate("/teacher/groups"),
     },
   ];
 
-  const selectedKey = location.pathname.split("/")[2] || "groups";
+  const selectedKey = location.pathname.split("/")[2] || "dashboard";
 
   return (
-    <Layout style={{ height: "100vh", overflow: "hidden" }}>
+    <Layout style={{ minHeight: "100vh", margin: 0 }}>
       <Sider
         trigger={null}
         collapsible
         collapsed={collapsed}
         width={200}
-        style={{
-          background: "white",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          zIndex: 1000,
-        }}
+        style={{ background: "white" }}
       >
+        {/* Logo */}
         <div
           style={{
             height: 64,
@@ -105,18 +70,14 @@ const AdminLayout = () => {
         />
       </Sider>
 
-      <Layout style={{ marginLeft: collapsed ? 80 : 200, height: "100vh" }}>
+      <Layout>
         <Header
           style={{
-            height: 64,
             padding: "0 16px",
             background: colorBgContainer,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            position: "sticky",
-            top: 0,
-            zIndex: 999,
           }}
         >
           <Button
@@ -125,15 +86,16 @@ const AdminLayout = () => {
             onClick={() => setCollapsed(!collapsed)}
             style={{ fontSize: 18 }}
           />
+
+          {/* UserDropdown  */}
           <UserDropdown />
         </Header>
 
         <Content
           style={{
+            margin: "20px 16px",
             padding: 24,
-            overflowY: "auto",
-            height: "calc(100vh - 64px)",
-            background: "#f5f5f5",
+            minHeight: 280,
           }}
         >
           <Outlet />
@@ -143,4 +105,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default TeacherLayout;
